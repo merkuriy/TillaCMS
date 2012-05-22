@@ -223,7 +223,18 @@ $.tree = function(options){
   /* Remove node */
   $(options.id + ' .icon-trash').die('click');
   $(options.id + ' .icon-trash').live('click', function() {
-    console.log('remove node');
+    $confirm(
+      'Удаление элемента',
+      'Вы действительно хотите удалить данный элемент и все дочерние к нему элементы?',
+      'Да, удалить',
+      'Нет, отменить',
+      function() {
+        console.log('remove element');
+      },
+      function() {
+        console.log('cancel remove element');
+      }
+    );
   });
 
 

@@ -193,3 +193,11 @@ i.control{
 	.ui-sortable-helper .control{
 		display: none !important;
 	}
+
+
+/**
+ * Confirm modal
+ */
+#confirm-modal{
+	display: none;
+}

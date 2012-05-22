@@ -28,6 +28,27 @@ var $alert = function(message, type) {
     });
 }
 
+var $confirm = function(header, message, trueText, falseText, trueFunction, falseFunction) {
+  $('#confirm-modal').find('h3').html(header);
+  $('#confirm-modal').find('p').html(message);
+  $('#confirm-false-btn')
+    .html(trueText)
+    .die('click')
+    .live('click', trueFunction)
+    .live('click', function() {
+      $('#confirm-modal').modal('hide');
+    });
+  $('#confirm-true-btn')
+    .html(falseText)
+    .die('click')
+    .live('click', falseFunction)
+    .live('click', function() {
+      $('#confirm-modal').modal('hide');
+    });
+
+  $('#confirm-modal').modal();
+}
+
 $().ready(function() {
 
   /**
