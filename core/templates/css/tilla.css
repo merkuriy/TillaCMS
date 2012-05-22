@@ -179,4 +179,17 @@ i.control{
 	width: 350px;
 }
 
-.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
+/**
+ * Tree sortable helpers
+ */
+.ui-sortable-highlight {
+	height: 24px;
+	line-height: 1.2em;
+	background-color: #ddd;
+}
+.ui-sortable-helper{
+	opacity: 0.5;
+}
+	.ui-sortable-helper .control{
+		display: none !important;
+	}

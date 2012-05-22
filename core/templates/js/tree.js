@@ -236,17 +236,34 @@ $.tree = function(options){
   /* Create first ul */
   $(options.id).append('<ul class="nav nav-list" data-parent="0"></ul>');
   $(options.id+' ul').nestedSortable({
-      // handle: 'a',
-      items: 'li',
-      placeholder: 'ui-state-highlight',
-      listType: 'ul',
-      stop: function(event, ui) {
-        console.log($(ui.item[0]).parent().parent().find('li a .icon-folder-close'));
-        if ($(ui.item[0]).parent().parent().find('.icon-folder-close').size() > 0) {
-          $alert('Предварительно откройте элемент для перетаскивания!');
-          return false;
+    items: 'li',
+    placeholder: 'ui-sortable-highlight',
+    listType: 'ul',
+    stop: function(event, ui) {
+      var $node = $(ui.item[0]).parent().parent().children('ul');
+          $icon = $(ui.item[0]).parent().parent().children('a').children('.icon-folder-close');
+
+      if ($icon.size() > 0) {
+        $alert('Предварительно откройте элемент для перетаскивания!');
+        $node.remove();
+        return false;
+      } else {
+        var $pos    = $(ui.item[0]).index(),
+            $parent = 0,
+            $nodeID = $(ui.item[0]).children('a').data('id');
+
+        if ($(ui.item[0]).parent().parent().attr('id') != 'tree') {
+          $parent = $(ui.item[0]).parent().parent().children('a').data('id');
         }
+
+        $.ajax({
+          type: "GET",
+          url: "../core/admin.php",
+          data: "module=structure&action=updatePosition&id="+$nodeID+"&parent="+$parent+"&pos="+$pos
+        });
+
       }
+    }
   });
 
   load_nodes(0);
