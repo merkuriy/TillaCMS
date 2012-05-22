@@ -1,0 +1,29 @@
+RewriteEngine On
+
+<IfModule mod_charset.c>
+CharsetRecodeMultipartForms off
+</IfModule>
+
+<IfModule mod_php5.c>
+  php_value register_globals off
+</IfModule>
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^robots\.txt$  robots.php?path=$1%{QUERY_STRING} [L]
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^panel/(.+)$ core/admin.php?module=$1 [S=9,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^panel(/)?$ core/admin.php [S=9,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api\..+ /core/api.php [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !^panel
+RewriteRule .* core/view.php [L,QSA]
+
+
+

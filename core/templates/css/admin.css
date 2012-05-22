@@ -1,0 +1,168 @@
+/* Layout */
+body{
+  padding: 60px 0 0 0;
+}
+
+legend .info{
+  float: right;
+  font-size: 50%;
+}
+
+a,
+a:link,
+a:visited,
+a:active{
+  color: #08C;
+}
+
+body {
+  padding-top: 60px;
+  padding-bottom: 10px;
+}
+
+.content-header{
+  margin: 0;
+  padding: 0;
+}
+
+.form-content{
+  padding-top: 18px;
+  height: 462px;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+.form-actions{
+  margin: 0px;
+  padding: 10px 10px 0px;
+  text-align: left;
+  background-color: transparent;
+}
+
+legend .info{
+  float: right;
+  font-size: 50%;
+}
+
+.tree{
+  margin-bottom: 10px;
+}
+  .tree ul{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+  }
+    .tree ul li{
+      margin: 0px;
+      padding: 0px;
+      padding-left: 10px;
+    }
+      .tree ul li a{
+        margin: 0px;
+        padding: 0px;
+        padding: 3px;
+        padding-left: 5px;
+        margin-left: -10px;
+        display: block;
+      }
+      .tree ul li a.active{
+        background: #08C;
+        color: #FFF;
+      }
+      .tree li a .control{
+        float: right;
+        display: none;
+      }
+      .tree li a:hover{
+        text-decoration: none;
+        background-color: #eee;
+      }
+      .tree li a:hover .control{
+        display: block;
+      }
+      .tree ul li li a{
+        margin-left: -20px;
+        padding-left: 17px;
+      }
+      .tree ul li li li a{
+        margin-left: -30px;
+        padding-left: 29px;
+      }
+      .tree ul li li li li a{
+        margin-left: -40px;
+        padding-left: 41px;
+      }
+.searchContainer{
+  height: 0px;
+}
+.search{
+  padding: 3px;
+  background: #f5f5f5;
+  margin: -45px 17px 20px 1px;
+  position: absolute;
+}
+  .search input{
+    width: 201px;
+  }
+  .search form{
+    margin: 0px;
+  }
+
+.tree-container .buttons button{
+  width: 133px;
+}
+
+.edit-form{
+  margin-bottom: 0px;
+}
+
+.span4-5{
+  width: 410px;
+}
+.span2-5{
+  width: 220px;
+}
+
+.table380px{
+  margin: 0 20px;
+  width: 380px;
+}
+.width14{
+  width: 14px;
+}
+.width28{
+  width: 28px;
+}
+.float-right{
+  float: right;
+}
+.float-left{
+  float: left;
+}
+.model.form-actions{
+  padding-right: 20px;
+  text-align: right;
+}
+.modal .form-content{
+  height: auto;
+}
+
+
+#settingsTable small{
+  font-size: 80%;
+}
+
+i.control{
+  cursor: pointer;
+}
+
+#editor{
+  width: 870px;
+  height: 400px;
+  position: absolute;
+  padding: 0px;
+}
+
+#header{
+  margin: 0;
+}
