@@ -158,9 +158,9 @@ $.tree = function(options){
 
       $('[data-parent="'+node+'"]').append(
         '<li><a href="#" data-id="' + this.id + '" data-no-ajax="true">' +
-        '<i class="icon-' + icon + '"></i> ' +
+        '<div class="title"><i class="icon-' + icon + '"></i> ' +
         this.title +
-        '<div class="control"><i class="icon-plus"></i><i class="icon-edit"></i><i class="icon-trash"></i></div></a></li>'
+        '</div><div class="control"><i class="icon-plus"></i><i class="icon-edit"></i><i class="icon-trash"></i></div></a></li>'
       );
     });
   }

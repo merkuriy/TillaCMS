@@ -86,6 +86,7 @@ legend .info{
 	background: #f5f5f5;
 	margin: -45px 17px 20px 1px;
 	position: absolute;
+	z-index: 30;
 }
 	.search input{
 		width: 201px;
@@ -182,6 +183,20 @@ i.control{
 /**
  * Tree sortable helpers
  */
+#tree li .title{
+	white-space: nowrap;
+	position: relative;
+	z-index: 10;
+}
+#tree li .control{
+	margin-top: -18px;
+	background-color: #eee;
+	position: relative;
+	z-index: 20;
+}
+#tree li .active .control{
+	background-color: #08c;
+}
 .ui-sortable-highlight {
 	height: 24px;
 	line-height: 1.2em;
