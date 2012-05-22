@@ -223,16 +223,28 @@ $.tree = function(options){
   /* Remove node */
   $(options.id + ' .icon-trash').die('click');
   $(options.id + ' .icon-trash').live('click', function() {
+    var self = $(this);
     $confirm(
       'Удаление элемента',
       'Вы действительно хотите удалить данный элемент и все дочерние к нему элементы?',
       'Да, удалить',
       'Нет, отменить',
       function() {
-        console.log('remove element');
+        $.ajax({
+          type: "GET",
+          url: "../core/admin.php",
+          data: "module=structure&author=admin&action=deleteElement&id="+self.closest('a').data('id'),
+          success: function(msg){
+            $alert('Удаление успешно завершено!', 'success');
+            if (self.closest('ul').find('li').size() == 1) {
+              self.closest('ul').parent('li').children('a').children('i').removeClass('icon-folder-open').addClass('icon-file');
+            }
+            self.closest('li').remove();
+          }
+        });
       },
       function() {
-        console.log('cancel remove element');
+        $alert('Удаление отменено', 'success');
       }
     );
   });

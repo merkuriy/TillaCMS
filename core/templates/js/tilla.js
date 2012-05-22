@@ -13,7 +13,7 @@ var $loadPage = function(href) {
 
 var $alert = function(message, type) {
   if (type != '') {
-    type = 'alert'+type;
+    type = 'alert-'+type;
   }
   $('<div class="alert '+type+'" style="display: none;">'+message+'</div>')
     .appendTo('#alert-block')
@@ -31,14 +31,14 @@ var $alert = function(message, type) {
 var $confirm = function(header, message, trueText, falseText, trueFunction, falseFunction) {
   $('#confirm-modal').find('h3').html(header);
   $('#confirm-modal').find('p').html(message);
-  $('#confirm-false-btn')
+  $('#confirm-true-btn')
     .html(trueText)
     .die('click')
     .live('click', trueFunction)
     .live('click', function() {
       $('#confirm-modal').modal('hide');
     });
-  $('#confirm-true-btn')
+  $('#confirm-false-btn')
     .html(falseText)
     .die('click')
     .live('click', falseFunction)
