@@ -75,14 +75,14 @@ class modules_structure_site{
 	}
 
     function sendComment($POST) {
-		unset($data['id']);
+			unset($data['id']);
 	    $POST['base_class'] = 'comment';
 	    $POST['title']      = $POST['author'].' '.$POST['url'];
 	    $POST['parent_id']  = 42;
 	    $POST['page_id']    = $POST['page'];
-		modules_structure_sys::set($POST);
+			modules_structure_sys::set($POST);
 		
-		echo 'ok';
+			echo 'ok';
     }
 }
 ?>

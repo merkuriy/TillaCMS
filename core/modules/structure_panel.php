@@ -202,5 +202,53 @@
 
       return $base_class;
     }
+
+
+    /**
+     * Get children models
+     */
+    public function get_child_model($data) {
+
+      if ($data['id'] == 0) {
+        $childs = sys::sql('
+          SELECT
+            models.id,
+            models.name,
+            models.title
+          FROM
+            prefix_ClassSections as models
+          WHERE
+                models.parent_id = 0
+            AND models.type = "type"
+        ', 1);
+      } else {
+        $childs = sys::sql('
+          SELECT
+            models.id,
+            models.name,
+            models.title
+          FROM
+            prefix_Sections as content,
+            prefix_ClassSections as models
+          WHERE
+                content.id = '.$data['id'].'
+            AND content.base_class = models.parent_id
+            AND models.type = "type_children"
+        ', 1);        
+      }
+
+      echo json_encode($childs);
+    }
+
+
+    /**
+     * Add child node
+     */
+    public function add_new_element($data) {
+
+      $id = modules_structure_sys::set($data);
+
+      echo json_encode(array('id' => $id));
+    }
   }
 ?>

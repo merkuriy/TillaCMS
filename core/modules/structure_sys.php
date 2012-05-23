@@ -241,7 +241,16 @@ class modules_structure_sys {
 			// Проверям на существование указателя родительского элемента
 			if (isset($request['parent_id']) AND isset($request['base_class'])){
 				// Проверяем существование указанного родителя в БД
-				$parentName  = sys::sql("SELECT id FROM prefix_Sections WHERE id='".$request['parent_id']."' LIMIT 1;", 1);
+				if ($request['parent_id'] == 0) {
+					$parentName = array(
+						array(
+							'id' => 0
+						)
+					);
+				} else {
+					$parentName  = sys::sql("SELECT id FROM prefix_Sections WHERE id='".$request['parent_id']."' LIMIT 1;", 1);
+				}
+
 				// Проверяем существование указанного класса в БД
 				$parentClass = sys::sql("SELECT name FROM prefix_ClassSections WHERE id='".$request['base_class']."' OR name='".$request['base_class']."' LIMIT 1;", 1);
 

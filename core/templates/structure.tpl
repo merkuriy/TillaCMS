@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="btn btn-success"><i class="icon-plus icon-white"></i> Добавить</button>
+      <button class="btn btn-success" id="create-root"><i class="icon-plus icon-white"></i> Добавить</button>
       <button class="btn"><i class="icon-search"></i> Поиск</button>
     </div>
   </div>
@@ -177,6 +177,47 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal" id="content-create-modal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Добавить элемент</h3>
+  </div>
+  <div class="modal-body">
+    <form class = "form-horizontal edit-form">
+      <input id="content-id" type="hidden" />
+      <div class="control-group">
+        <label class="control-label" for="content-type">
+          Виберите модель
+        </label>
+        <div class="controls">
+          <select id="content-type">
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="content-name">
+          Введите название
+        </label>
+        <div class="controls">
+          <input id="content-name" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="content-uri">
+          Введите адрес
+        </label>
+        <div class="controls">
+          <input id="content-uri">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" id="cancel-content-btn">Отменить</a>
+    <a href="#" class="btn btn-primary" id="create-content-btn">Создать</a>
   </div>
 </div>
 

@@ -57,7 +57,20 @@
       </div>
     </div>
 
-    <div id="alert-block">
+    <div id="alert-block"></div>
+
+    <div class="modal" id="confirm-modal">
+      <div class="modal-header">
+        <button class="close" data-dismiss="modal">×</button>
+        <h3></h3>
+      </div>
+      <div class="modal-body">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" id="confirm-false-btn"></a>
+        <a href="#" class="btn btn-primary" id="confirm-true-btn"></a>
+      </div>
     </div>
 
     <script type="text/javascript" src="/core/templates/js/jquery.js"></script>

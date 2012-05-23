@@ -216,3 +216,11 @@ i.control{
 #confirm-modal{
 	display: none;
 }
+
+
+/**
+ * Create content modal
+ */
+#content-create-modal{
+	display: none;
+}
