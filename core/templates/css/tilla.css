@@ -96,7 +96,7 @@ legend .info{
 	}
 
 .tree-container .buttons button{
-	width: 133px;
+	width: 270px;
 }
 
 .edit-form{
@@ -223,5 +223,17 @@ i.control{
  * Create content modal
  */
 #content-create-modal{
+	display: none;
+}
+
+
+
+/**
+ * Search place
+ */
+.searchContainer{
+	display: none;
+}
+#search-button{
 	display: none;
 }

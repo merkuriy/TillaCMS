@@ -16,7 +16,7 @@
     </div>
     <div class="buttons">
       <button class="btn btn-success" id="create-root"><i class="icon-plus icon-white"></i> Добавить</button>
-      <button class="btn"><i class="icon-search"></i> Поиск</button>
+      <button class="btn" id="search-button"><i class="icon-search"></i> Поиск</button>
     </div>
   </div>
   <div class="span9" id="node-content">
