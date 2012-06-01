@@ -178,6 +178,7 @@ i.control{
 	top: 50px;
 	right: 20px;
 	width: 350px;
+	z-index: 1000000;
 }
 
 /**

@@ -129,7 +129,7 @@ $.tree = function(options){
                         theme_advanced_buttons2 : "",
                         theme_advanced_buttons3 : "",
                         fullscreen_settings : {                        
-                          theme_advanced_buttons1 : "undo,redo,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,cleanup,removeformat,visualaid,visualchars,nonbreaking,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,outdent,indent,blockquote,|,sub,sup,|,bullist,numlist,formatselect,code,|,fullscreen",
+                          theme_advanced_buttons1 : "save,|,undo,redo,|,cut,copy,paste,pastetext,pasteword,|,search,replace,|,cleanup,removeformat,visualaid,visualchars,nonbreaking,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,outdent,indent,blockquote,|,sub,sup,|,bullist,numlist,formatselect,code,|,fullscreen",
                           theme_advanced_buttons2 : "tablecontrols,|,insertlayer,moveforward,movebackward,absolute,|,link,unlink,anchor,|,insertdate,inserttime,|,charmap,emotions,iespell,media,image,images,advhr,hr,|,cite,abbr,acronym,del,ins,attribs,styleprops,|,typograf",
                           theme_advanced_path_location : "bottom"
                         },
@@ -151,6 +151,24 @@ $.tree = function(options){
                         template_replace_values : {
                           username : "Some User",
                           staffid : "991234"
+                        },
+                        setup : function(ed){        
+                          if (ed.editorId != 'mce_fullscreen') {
+                            tinyMCE.myActiveEditor = {};
+                            tinyMCE.myActiveEditor = ed;
+                          }
+                          ed.onActivate.add( function(ed){
+                            if( ed.editorId != 'mce_fullscreen' ){
+                              tinyMCE.myActiveEditor = {};
+                              tinyMCE.myActiveEditor = ed;
+                            }
+                          });
+                          ed.onLoadContent.add( function(ed){
+                            ed.addCommand('mceSave', function(){
+                              $('#content-save').click();
+                              return false;
+                            });
+                          }); 
                         }
                       });
                     }
