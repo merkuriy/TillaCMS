@@ -19,7 +19,7 @@
             <span class="fieldLabel" rel="tooltip" data-original-title="%attr(title)%">Название</span>
           </label>
           <div class="controls">
-            <input type="text" class="span2-5" id="title" value="${title}">
+            <input type="text" class="span2-5" id="title" name="title" value="${title}">
           </div>
         </div>
         <div class="control-group span4-5">
@@ -27,7 +27,7 @@
             <span class="fieldLabel" rel="tooltip" data-original-title="%attr(_url)%">Адрес</span>
           </label>
           <div class="controls">
-            <input type="text" class="span2-5" id="name" value="${name}">
+            <input type="text" class="span2-5" id="name" value="${name}" name="name">
           </div>
         </div>
       </div>

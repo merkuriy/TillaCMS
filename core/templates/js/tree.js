@@ -36,7 +36,7 @@ $.tree = function(options){
       $('[data-parent="'+node+'"]').append(
         '<li><a href="#" data-id="' + this.id + '" data-no-ajax="true">' +
         '<div class="title"><i class="icon-' + icon + '"></i> ' +
-        this.title +
+        '<span>' + this.title + '</span>' +
         '</div><div class="control"><i class="icon-plus"></i><i class="icon-edit"></i><i class="icon-trash"></i></div></a></li>'
       );
     });

@@ -112,6 +112,8 @@ $().ready(function() {
     $('#node-content form').ajaxSubmit({
       success : function() {
         $alert('Сохранение прошло успешно', 'success');
+        var $id = $('#node-content input[name="id"]').val();
+        $('[data-id="' + $id + '"] span').text($('#title').val());
       }
     });
     return false;
