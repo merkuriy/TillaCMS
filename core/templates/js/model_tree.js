@@ -118,12 +118,9 @@ $.model_tree = function(options){
           $.ajax({
             type: "GET",
             url: "../core/admin.php",
-            data: "module=structure&author=admin&action=deleteElement&id="+self.closest('a').data('id'),
+            data: "/api.post/structure_panel.model_remove&id="+self.closest('a').data('id'),
             success: function(msg){
               $alert('Удаление успешно завершено!', 'success');
-              if (self.closest('ul').find('li').size() == 1) {
-                self.closest('ul').parent('li').children('a').children('i').removeClass('icon-folder-open').addClass('icon-file');
-              }
               self.closest('li').remove();
             }
           });

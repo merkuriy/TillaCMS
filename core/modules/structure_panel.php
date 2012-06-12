@@ -355,5 +355,55 @@
 
       echo mysql_insert_id();
     }
+
+
+    /**
+     *
+     */
+    public function model_remove($data) {
+
+      $id = $data['id'];
+      // Выбираем элементы структуры основанные на данном базовом классе 
+      $sql = sys::sql("SELECT
+                `id`
+              FROM
+                `prefix_Sections`
+              WHERE
+                `base_class` = '$id'
+      ;",0);
+
+      // Удаляем все элементы структуры основанные на данном базовом классе
+      while ($row = mysql_fetch_array($sql)){
+        modules_structure_admin::deleteElement($row['id']);
+      }
+
+      // Узнаем имя удаляемого класса
+      $sql = sys::sql("SELECT
+                `name`
+              FROM
+                `prefix_ClassSections`
+              WHERE
+                `id` = '$id'
+      ;",0);
+
+      $name = mysql_result($sql,0);
+
+      // Удаляем все дочерние элементы Базового класса
+      $sql = sys::sql("DELETE
+              FROM
+                `prefix_ClassSections`
+              WHERE
+                `name` = '$name'
+      ;",0);
+
+      // Удаляем базовый класс
+      $sql = sys::sql("DELETE
+              FROM
+                `prefix_ClassSections`
+              WHERE
+                `id` = '$id'
+              LIMIT 1
+      ;",0);
+    }
   }
 ?>
