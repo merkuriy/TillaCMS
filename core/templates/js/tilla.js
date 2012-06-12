@@ -197,4 +197,102 @@ $().ready(function() {
 
     return false;
   });
+
+
+
+  /**
+   * Editing models
+   */
+  $('#model-child-modal').live('click', function() {
+
+    $.ajax({
+      url: "/api.post/structure_panel.get_model_tree",
+      dataType: 'json',
+      success: function(data) {
+        var $option = '<option value="${id}" data-name="${name}">${title}</option>';
+
+        $.template('option', $option);
+        $.tmpl("option", data).appendTo("#model-add-child");
+      }
+    });
+  });
+
+  $('#model-add-child-cancel').live('click', function() {
+    $('#childModal').modal('hide');
+  });
+
+  $('#model-add-child-submit').live('click', function() {
+
+    $.ajax({
+      url: "/api.post/structure_panel.model_add_child?type="+$('#model-add-child').val()+"&id="+$('#model-content input[name="id"]').val(),
+      dataType: 'json',
+      success: function(data) {
+        var $id    = $('#model-add-child').val(),
+            $title = $('#model-add-child option[value="'+$id+'"]').text(),
+            $name  = $('#model-add-child option[value="'+$id+'"]').data('name');
+
+        $('#model-childs').append(
+          '<tr data-id="'+data+'"><td>'+$title+'</td><td>'+$name+'</td><td class="width14"><i class="icon-trash control"></i></td></tr>'
+        );
+
+        $('#childModal').modal('hide');
+        $alert('Дочерний элемент добавлен!', 'success');
+      }
+    });
+    return false;
+  });
+
+  $('#model-add-attr-cancel').live('click', function() {
+    $('#attrModal').modal('hide');
+  });
+
+  $('#model-add-attr-submit').live('click', function() {
+
+    $.ajax({
+      method: "GET",
+      url: "/api.post/structure_panel.model_add_attr",
+      data : {
+        id   : $('#model-content input[name="id"]').val(),
+        value: $('#model-add-attr').val(),
+        name : $('#model-add-name').val(),
+        title: $('#model-add-title').val()
+      },
+      dataType: 'json',
+      success: function(data) {
+
+        $('#model-attrs').append(
+          '<tr data-id="'+data+'"><td>'+$('#model-add-title').val()+'</td><td>'+$('#model-add-name').val()+'</td><td class="info"><i class="icon-th"></i> '+$('#model-add-attr').val()+'</td><td class="width28"><i class="icon-cog control"></i><i class="icon-trash control"></i></td></tr>'
+        );
+
+        $('#attrModal').modal('hide');
+        $alert('Атрибут добавлен!', 'success');
+      }
+    });
+    return false;
+  });
+
+  // Removing child
+  $('#model-childs .icon-trash, #model-attrs .icon-trash').live('click', function() {
+    var self = $(this);
+
+    $confirm(
+      'Удаление элемента',
+      'Вы действительно хотите удалить данный элемент?',
+      'Да, удалить',
+      'Нет, отменить',
+      function() {
+        $.ajax({
+          type: "GET",
+          url: "/api.post/structure_panel.model_remove_child?id="+self.closest('tr').data('id'),
+          success: function(msg){
+            $alert('Удаление успешно завершено!', 'success');
+            self.closest('tr').remove();
+          }
+        });
+      },
+      function() {
+        $alert('Удаление отменено', 'success');
+      }
+    );
+  });
 });

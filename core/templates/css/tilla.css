@@ -184,18 +184,18 @@ i.control{
 /**
  * Tree sortable helpers
  */
-#tree li .title{
+.tree li .title{
 	white-space: nowrap;
 	position: relative;
 	z-index: 10;
 }
-#tree li .control{
+.tree li .control{
 	margin-top: -18px;
 	background-color: #eee;
 	position: relative;
 	z-index: 20;
 }
-#tree li .active .control{
+.tree li .active .control{
 	background-color: #08c;
 }
 .ui-sortable-highlight {

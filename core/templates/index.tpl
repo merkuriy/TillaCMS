@@ -88,6 +88,7 @@
     <script type="text/javascript" src="/core/templates/js/tiny_mce/jquery.tinymce.js"></script>
     <script type="text/javascript" src="/core/templates/js/bootstrap.js"></script>
     <script type="text/javascript" src="/core/templates/js/tree.js"></script>
+    <script type="text/javascript" src="/core/templates/js/model_tree.js"></script>
     <script type="text/javascript" src="/core/templates/js/tilla.js"></script>
 
   </body>

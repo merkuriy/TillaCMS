@@ -2,7 +2,6 @@ $.tree = function(options){
   var $ = jQuery;
 
   var load_nodes = function(node) {
-
     if (!node) {
       node = 0;
     }

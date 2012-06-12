@@ -250,5 +250,110 @@
 
       echo json_encode(array('id' => $id));
     }
+
+
+    /**
+     * Get models for model_tree
+     */
+    public function get_model_tree() {
+
+      $models = sys::sql('SELECT * FROM prefix_ClassSections WHERE type="type"', 1);
+
+      echo json_encode($models);
+    }
+
+
+    /**
+     * Get model
+     */
+    public function get_model($data) {
+
+      $id = $data['id'];
+
+      $model  = sys::sql('SELECT * FROM prefix_ClassSections WHERE id = '.$id, 1);
+      $childs = sys::sql('SELECT * FROM prefix_ClassSections WHERE parent_id = '.$id.' AND type="type_children"', 1);
+      $attrs  = sys::sql('SELECT * FROM prefix_ClassSections WHERE parent_id = '.$id.' AND type="attr"', 1);
+
+      $out = array(
+        'id'     => $model[0]['id'],
+        'title'  => $model[0]['title'],
+        'name'   => $model[0]['name'],
+        'childs' => $childs,
+        'attrs'  => $attrs
+      );
+
+      echo json_encode($out);
+    }
+
+
+    /**
+     *
+     */
+    public function model_add_child($data) {
+
+      $id = $data['id'];
+
+      $sql = sys::sql("SELECT
+                `title`,
+                `name`
+              FROM
+                `prefix_ClassSections`
+              WHERE
+                `id` = '".$data['type']."'
+      ;",0);
+
+      $type = mysql_fetch_array($sql);
+
+      $sql = sys::sql("INSERT INTO
+                `prefix_ClassSections`
+              VALUES (
+                '',
+                '$id',
+                '".$type['name']."',
+                '".$type['title']."',
+                'type_children',
+                ''
+              )
+      ;", 0);
+
+      echo mysql_insert_id();
+    }
+
+
+    /**
+     *
+     */
+    public function model_remove_child($data) {
+
+      $id = $data['id'];
+      $sql = sys::sql("DELETE
+              FROM
+                `prefix_ClassSections`
+              WHERE
+                `id` = '$id'
+              LIMIT 1
+      ;",0);
+    }
+
+
+    /**
+     *
+     */
+    public function model_add_attr($data) {
+
+      $sql = sys::sql("INSERT INTO
+                `prefix_ClassSections`
+              VALUES (
+                '',
+                '".$data['id']."',
+                '".$data['name']."',
+                '".$data['title']."',
+                'attr',
+                '".$data['value']."'
+              )
+      ;",0);
+
+      echo mysql_insert_id();
+    }
   }
 ?>
