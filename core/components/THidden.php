@@ -176,8 +176,8 @@ class components_THidden {
 		$SEND['id'] = $id;
 		$SEND['js'] = 'THidden/editRuleDialog.js';
 
-		echo admin::draw('THidden/editRuleDialog',$SEND);
-
+		// echo admin::draw('THidden/editRuleDialog',$SEND);
+		return $SEND;
 	} 
 
 

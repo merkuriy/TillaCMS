@@ -148,13 +148,9 @@ class components_TSelect{
 				$SEN['name']=$row['name'];
 				$SEN['title']=$row['title'];
 				$SEN['id']=$row['id'];
-				$SEND['value'] .= admin::draw('TSelect/values',$SEN);
+				$SEND['value'][] = $SEN;
 			}
-		} else {
-			$SEND['value'] = 'Нет значений';
 		};
-
-		$SEND['value'] .= '<br />';
 
 		$SEND['parent'] = mysql_result(
 			sys::sql("SELECT
@@ -168,7 +164,8 @@ class components_TSelect{
 		$SEND['id'] = $id;
 		$SEND['js'] = 'TSelect/editRuleDialog.js';
 
-		echo admin::draw('TSelect/editRuleDialog',$SEND);
+		// echo admin::draw('TSelect/editRuleDialog',$SEND);
+		return $SEND;
 
 	} 
 

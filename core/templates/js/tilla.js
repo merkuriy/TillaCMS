@@ -217,9 +217,11 @@ $().ready(function() {
     });
   });
 
+
   $('#model-add-child-cancel').live('click', function() {
     $('#childModal').modal('hide');
   });
+
 
   $('#model-add-child-submit').live('click', function() {
 
@@ -242,9 +244,11 @@ $().ready(function() {
     return false;
   });
 
+
   $('#model-add-attr-cancel').live('click', function() {
     $('#attrModal').modal('hide');
   });
+
 
   $('#model-add-attr-submit').live('click', function() {
 
@@ -271,6 +275,7 @@ $().ready(function() {
     return false;
   });
 
+
   // Removing child
   $('#model-childs .icon-trash, #model-attrs .icon-trash').live('click', function() {
     var self = $(this);
@@ -294,5 +299,47 @@ $().ready(function() {
         $alert('Удаление отменено', 'success');
       }
     );
+  });
+
+
+  // Attr settings
+  $('#model-attrs .icon-cog').live('click', function() {
+    var $component = $.trim($(this).closest('tr').find('td:eq(2)').text()),
+        $id        = $(this).closest('tr').data('id');
+
+    $.ajax({
+      type: "GET",
+      dataType: 'json',
+      url: "/api.post/structure_panel.get_component_settings?id="+$id+"&component="+$component,
+      success: function(msg){
+        if ($component == 'THidden') {
+          $('#model-thidden-default').val(msg.value);
+        }
+
+        if ($component == 'TText') {
+          $('#model-ttext-type option[value="'+msg.value+'"]').attr('selected', 'selected');
+        }
+
+        if ($component == 'TSelect') {
+          var $tselect_markup = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="width14"><i class="icon-trash control"></i></td></tr>';
+
+          $.template('model-tselect', $tselect_markup);
+          $.tmpl("model-tselect", msg.value).appendTo("#model-tselect-values");
+
+          console.log(msg);
+        }
+
+        if ($component == 'TImage') {
+          console.log(msg);
+        }
+      }
+    });
+
+    $('#' + $component + 'Settings').modal('show').data('id', $id);
+  })
+
+
+  $('.close-dialog').live('click', function() {
+    $(this).closest('.modal').modal('hide');
   });
 });

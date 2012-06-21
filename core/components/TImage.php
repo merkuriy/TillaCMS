@@ -452,11 +452,15 @@ class components_TImage {
 							`prefix_ImageSettings`
 						WHERE
 							`parent_id`='$id'
-		;",0);		
+		;",1);		
 
-		while($row = mysql_fetch_array($sql)){
-			$SEND['rule'] .= admin::draw('TImage/rule',$row);
+		foreach ($sql as $key => $value) {
+			$SEND['rule'][] = $value;
 		}
+
+		// while($row = mysql_fetch_array($sql)){
+		// 	$SEND['rule'][] = $row;
+		// }
 
 		$SEND['parent'] = mysql_result(
 			sys::sql("SELECT
@@ -471,7 +475,8 @@ class components_TImage {
 		$SEND['id'] = $id;
 		$SEND['js'] = 'TImage/editRuleDialog.js';
 
-		echo admin::draw('TImage/editRuleDialog',$SEND);
+		// echo admin::draw('TImage/editRuleDialog',$SEND);
+		return $SEND;
 	}
 
 

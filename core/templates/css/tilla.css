@@ -237,3 +237,11 @@ i.control{
 #search-button{
 	display: none;
 }
+
+.ta-right{
+	text-align: right !important;
+}
+
+.tselect-settings{
+	margin-bottom: 0;
+}

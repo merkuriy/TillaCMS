@@ -62,12 +62,19 @@ $.model_tree = function(options){
                 $('#model-zone').css('height', $(window).height()-168);
 
                 var $child_markup = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="width14"><i class="icon-trash control"></i></td></tr>',
-                    $attr_markup  = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="info"><i class="icon-th"></i> ${value}</td><td class="width28"><i class="icon-cog control"></i><i class="icon-trash control"></i></td></tr>';
+                    $attr_markup  = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="info"><i class="icon-th"></i> ${value}</td><td class="width28 ta-right"><i class="icon-cog control"></i><i class="icon-trash control"></i></td></tr>';
 
                 $.template('model-child', $child_markup);
                 $.tmpl("model-child", data.childs).appendTo("#model-childs");
                 $.template('model-attr', $attr_markup);
                 $.tmpl("model-attr", data.attrs).appendTo("#model-attrs");
+
+                $('#model-attrs tr').each(function() {
+                  $text = $.trim($(this).find('td:eq(2)').text());
+                  if ($text != 'TText' && $text != 'TSelect' && $text != 'THidden' && $text != 'TImage') {
+                    $(this).find('.icon-cog').hide();
+                  }
+                });
               }
             });
           }

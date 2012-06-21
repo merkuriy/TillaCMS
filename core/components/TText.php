@@ -117,20 +117,19 @@ class components_TText{
 		components_TText::createTable();
 		
 		$SEND = sys::sql("SELECT `type` FROM `prefix_TTextSettings` WHERE `id`='$id';",1);
-		
-		
-		
+
 		if (count($SEND)){
+			$SEND['value'] = $SEND[0]['type'];
 			$SEND['type1'] = $SEN['type2'] = '';
 			if( $SEND[0]['type']==2 )
 				$SEND['type2'] = 'selected="selected"';
 			else if( $SEND[0]['type'] )
 				$SEND['type1'] = 'selected="selected"';
-		}
-			
-		else
+		} else {
 			$SEND['type1'] = '';
-		
+			$SEND['value'] = '0';
+		}
+
 		$SEND['parent'] = mysql_result(
 			sys::sql("SELECT
 						`parent_id`
@@ -144,7 +143,8 @@ class components_TText{
 		$SEND['id'] = $id;
 		$SEND['js'] = 'TText/editRuleDialog.js';
 		
-		echo admin::draw('TText/editRuleDialog',$SEND);
+		// echo admin::draw('TText/editRuleDialog',$SEND);
+		return $SEND;
 		
 	} 
 

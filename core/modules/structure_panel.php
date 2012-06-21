@@ -405,5 +405,19 @@
               LIMIT 1
       ;",0);
     }
+
+
+
+    /**
+     * Get component settings
+     */
+    public function get_component_settings($post) {
+
+      $id        = $post['id'];
+      $component = $post['component'];
+      eval('$data = components_'.$component.'::editSettings($id);');
+
+      echo json_encode($data);
+    }
   }
 ?>
