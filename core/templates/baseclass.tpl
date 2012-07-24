@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="btn btn-success" id="create-root"><i class="icon-plus icon-white"></i> Добавить</button>
+      <button class="btn btn-success" id="create-model"><i class="icon-plus icon-white"></i> Добавить</button>
       <button class="btn" id="search-button"><i class="icon-search"></i> Поиск</button>
     </div>
   </div>
@@ -24,6 +24,37 @@
 </div>
 
 <!-- Modals -->
+<div class="modal hide fade" id="model-create-modal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">×</button>
+    <h3>Добавить модель</h3>
+  </div>
+  <div class="modal-body">
+    <form class = "form-horizontal edit-form">
+      <div class="control-group">
+        <label class="control-label" for="model-title">
+          Введите название
+        </label>
+        <div class="controls">
+          <input id="model-title" />
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="model-call">
+          Введите имя для вызова
+        </label>
+        <div class="controls">
+          <input id="model-call">
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="btn" id="cancel-model-btn">Отменить</a>
+    <a href="#" class="btn btn-primary" id="create-model-btn">Создать</a>
+  </div>
+</div>
+
 <div class="modal hide fade" id="attrModal">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
@@ -200,28 +231,92 @@
     <h3>Настройки компонента TImage</h3>
   </div>
   <div class="modal-body">
-    <form class="form-horizontal edit-form">
-      <fieldset>
-        <div class="form-content">
-          <div class="control-group">
-              <label class="control-label" for="model-ttext-type">
-                <span class="fieldLabel">Вывод компонента</span>
-              </label>
-            <div class="controls">
-              <select>
-                <option value="0">WYSIWYG редактор</option>
-                <option value="1">Простой редактор текста</option>
-                <option value="2">Редактор кода</option>
-              </select>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <th class="timage-psevdo">Псевдоним</th>
+        <th class="timage-width">Ширина</th>
+        <th class="timage-height">Высота</th>
+        <th class="timage-resize">Масштабирование</th>
+        <th class="timage-address">Заглушка</th>
+      </thead>
+      <tbody>
+        <tr class="control-row">
+          <td><input type="text" id="psevdo" placeholder="Псевдоним"></td>
+          <td><input type="text" id="width" placeholder="Ширина"></td>
+          <td><input type="text" id="height" placeholder="Высота"></td>
+          <td>
+            <select id="resize">
+              <option value="0">Не масштабировать</option>
+              <option value="1">Вписывыть в обслать</option>
+              <option value="2">Подрезать под область</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" id="address" placeholder="Заглушка">
+            <div class="float-right">
+              <i class="icon-ok control" id="add-image-settings"></i>
             </div>
-          </div>
-        </div>
-      </fieldset>
-    </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--
+    <table class="table table-bordered table-striped">
+      <tr>
+        <td>Псевдоним</td>
+        <td class="controlField"><input type="text" id="psevdo" /></td>
+      </tr>
+      <tr>
+        <td>Ширина</td>
+        <td class="controlField"><input type="text" id="width" /></td>
+      </tr>
+      <tr>
+        <td>Высота</td>
+        <td class="controlField"><input type="text" id="height" /></td>
+      </tr>
+      <tr>
+        <td>Водяной знак</td>
+        <td class="controlField"><input type="text" id="watermark" /></td>
+      </tr>
+      <tr>
+        <td>Положение по ширине</td>
+        <td class="controlField"><input type="text" id="waterWidth" /></td>
+      </tr>
+      <tr>
+        <td>Положение по высоте</td>
+        <td class="controlField"><input type="text" id="waterHeight" /></td>
+      </tr>
+      <tr>
+        <td>Обрезка по ширине</td>
+        <td class="controlField"><input type="text" id="cropWidth" /></td>
+      </tr>
+      <tr>
+        <td>Обрезка по высоте</td>
+        <td class="controlField"><input type="text" id="cropHeight" /></td>
+      </tr>
+      <tr>
+        <td>Правила масштабирования</td>
+        <td class="controlField">
+          <select id="resize">
+            <option value="0">Не масштабировать</option>
+            <option value="1">Вписывыть в обслать</option>
+            <option value="2">Подрезать под область</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Адрес заглушки</td>
+        <td class="controlField"><input type="text" id="address" /></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="controlField ta-center"><i class="icon-plus control" id="add-image-settings"></i></td>
+      </tr>
+    </table>
+    -->
   </div>
   <div class="modal-footer">
     <a href="#" class="btn close-dialog" id="model-timage-settings-cancel">Отменить</a>
-    <a href="#" class="btn btn-primary" id="model-timage-settings-submit">Сохранить</a>
   </div>
 </div>
 <!-- /Modals -->

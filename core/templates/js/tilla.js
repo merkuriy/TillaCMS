@@ -210,7 +210,7 @@ $().ready(function() {
       dataType: 'json',
       success: function(data) {
         var $option = '<option value="${id}" data-name="${name}">${title}</option>';
-
+        $('#model-add-child').html('');
         $.template('option', $option);
         $.tmpl("option", data).appendTo("#model-add-child");
       }
@@ -245,33 +245,67 @@ $().ready(function() {
   });
 
 
+
+  $('#model-attr-modal').live('click', function() {
+    $('#model-add-title').val('');
+    $('#model-add-name').val('');
+    $('#model-add-attr').val('');
+    $('#model-add-name').closest('.control-group').removeClass('error');
+    $('#model-add-title').closest('.control-group').removeClass('error');
+  });
+
+
+
   $('#model-add-attr-cancel').live('click', function() {
     $('#attrModal').modal('hide');
   });
 
 
   $('#model-add-attr-submit').live('click', function() {
+    var save = true;
 
-    $.ajax({
-      method: "GET",
-      url: "/api.post/structure_panel.model_add_attr",
-      data : {
-        id   : $('#model-content input[name="id"]').val(),
-        value: $('#model-add-attr').val(),
-        name : $('#model-add-name').val(),
-        title: $('#model-add-title').val()
-      },
-      dataType: 'json',
-      success: function(data) {
+    if ($('#model-add-name').val() == '') {
+      $('#model-add-name').closest('.control-group').addClass('error');
+      save = false;
+    } else {
+      $('#model-add-name').closest('.control-group').removeClass('error');
+    }
 
-        $('#model-attrs').append(
-          '<tr data-id="'+data+'"><td>'+$('#model-add-title').val()+'</td><td>'+$('#model-add-name').val()+'</td><td class="info"><i class="icon-th"></i> '+$('#model-add-attr').val()+'</td><td class="width28"><i class="icon-cog control"></i><i class="icon-trash control"></i></td></tr>'
-        );
+    if ($('#model-add-title').val() == '') {
+      $('#model-add-title').closest('.control-group').addClass('error');
+      save = false;
+    } else {
+      $('#model-add-title').closest('.control-group').removeClass('error');
+    }
 
-        $('#attrModal').modal('hide');
-        $alert('Атрибут добавлен!', 'success');
-      }
-    });
+    if (save) {
+      $.ajax({
+        method: "GET",
+        url: "/api.post/structure_panel.model_add_attr",
+        data : {
+          id   : $('#model-content input[name="id"]').val(),
+          value: $('#model-add-attr').val(),
+          name : $('#model-add-name').val(),
+          title: $('#model-add-title').val()
+        },
+        dataType: 'json',
+        success: function(data) {
+
+          if ($('#model-add-attr').val() == 'THidden' || $('#model-add-attr').val() == 'TSelect' || $('#model-add-attr').val() == 'TText' || $('#model-add-attr').val() == 'Timage') {
+            control = '<i class="icon-cog control"></i>';
+          } else {
+            control = '';
+          }
+
+          $('#model-attrs').append(
+            '<tr data-id="'+data+'"><td>'+$('#model-add-title').val()+'</td><td>'+$('#model-add-name').val()+'</td><td class="info"><i class="icon-th"></i> '+$('#model-add-attr').val()+'</td><td class="width28">'+control+'<i class="icon-trash control"></i></td></tr>'
+          );
+
+          $('#attrModal').modal('hide');
+          $alert('Атрибут добавлен!', 'success');
+        }
+      });
+    }
     return false;
   });
 
@@ -323,20 +357,283 @@ $().ready(function() {
         if ($component == 'TSelect') {
           var $tselect_markup = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="width14"><i class="icon-trash control"></i></td></tr>';
 
+          $("#model-tselect-values").html('');
           $.template('model-tselect', $tselect_markup);
           $.tmpl("model-tselect", msg.value).appendTo("#model-tselect-values");
-
-          console.log(msg);
         }
 
         if ($component == 'TImage') {
-          console.log(msg);
+          $('.timage-rule').remove();
+          $('#TImageSettings').data('id', $id);
+          var resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
+          $.each(msg.rule, function() {
+            $('#TImageSettings .control-row').before(
+                '<tr data-id="'+this.id+'" class="timage-rule">'
+              + '<td><span data-name="psevdo">'+this.psevdo+'</span></td>'
+              + '<td><span data-name="width">'+this.width+'</span></td>'
+              + '<td><span data-name="height">'+this.height+'</span></td>'
+              + '<td><span data-name="resize" data-val="'+this.resize+'">'+resize[this.resize]+'</span></td>'
+              + '<td><span data-name="address">'+this.path+'</span><div class="float-right"><i class="icon-edit control"></i> <i class="icon-trash control"></i></div></td>'
+              + '</tr>'
+            );
+          });
         }
       }
     });
 
     $('#' + $component + 'Settings').modal('show').data('id', $id);
   })
+
+
+  $('#add-image-settings').live('click', function() {
+    var save = true;
+    var resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
+
+    if ($('#width').val() == '') {save = false;}
+    if ($('#height').val() == '') {save = false;}
+
+    if (save) {
+      $.ajax({
+        type: "POST",
+        data: {
+          parent_id : $('#TImageSettings').data('id'),
+          width     : $('#width').val(),
+          height    : $('#height').val(),
+          psevdo    : $('#psevdo').val(),
+          resize    : $('#resize').val(),
+          path      : $('#address').val()
+        },
+        url: "/api.post/structure_panel.create_image_settings",
+        success: function(msg){
+          $('#TImageSettings .control-row').before(
+              '<tr data-id="'+msg+'" class="timage-rule">'
+            + '<td><span data-name="psevdo">'+$('#psevdo').val()+'</span></td>'
+            + '<td><span data-name="width">'+$('#width').val()+'</span></td>'
+            + '<td><span data-name="height">'+$('#height').val()+'</span></td>'
+            + '<td><span data-name="resize" data-val="'+$('#resize').val()+'">'+resize[$('#resize').val()]+'</span></td>'
+            + '<td><span data-name="address">'+$('#address').val()+'</span><div class="float-right"><i class="icon-edit control"></i> <i class="icon-trash control"></i></div></td>'
+            + '</tr>'
+          );
+        }
+      });
+    }
+
+    return false;
+  });
+
+
+
+  /**
+   * Removing image rule
+   */
+  $('#TImageSettings .icon-trash').live('click', function() {
+    var self = $(this),
+        eq   = $(this).closest('tr').data('id');
+
+    $confirm(
+      'Удаление правла',
+      'Вы действительно хотите удалить данное правило?',
+      'Да, удалить',
+      'Нет, отменить',
+      function() {
+        $.ajax({
+          type: "GET",
+          url: "/api.post/structure_panel.remove_image_settings?id="+eq,
+          success: function(msg){
+            $alert('Удаление успешно завершено!', 'success');
+            $('#TImageSettings tr[data-id="'+eq+'"]').remove();
+          }
+        });
+      },
+      function() {
+        $alert('Удаление отменено', 'success');
+      }
+    );
+  });
+
+
+
+  /**
+   * TImage edit settings
+   */
+  $('#TImageSettings .icon-edit').live('click', function() {
+    var $tr = $(this).closest('tr');
+
+    $tr.find('span').each(function() {
+      var name = $(this).data('name');
+      if (name != 'resize') {
+        $(this).replaceWith('<input type="text" id="edit-'+name+'" value="'+$(this).text()+'" data-old="'+$(this).text()+'">');
+      } else {
+        var val  = $(this).data('val');
+        $(this).replaceWith(
+          '<select id="edit-resize" data-old="'+val+'">'
+          + '<option value="0">Не масштабировать</option>'
+          + '<option value="1">Вписывыть в обслать</option>'
+          + '<option value="2">Подрезать под область</option>'
+          + '</select>'
+        );
+        $('#edit-resize').val(val);
+      }
+    });
+    $tr.find('.float-right').html('<i class="icon-ok save-settings"></i> <i class="icon-remove"></i>');
+  });
+
+
+
+  /**
+   * Cancel TImage setting edit
+   */
+  $('#TImageSettings .icon-remove').live('click', function() {
+    var $tr = $(this).closest('tr'),
+        resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
+
+    $tr.replaceWith(
+        '<tr data-id="'+$tr.data('id')+'" class="timage-rule">'
+      + '<td><span data-name="psevdo">'+$('#edit-psevdo').data('old')+'</span></td>'
+      + '<td><span data-name="width">'+$('#edit-width').data('old')+'</span></td>'
+      + '<td><span data-name="height">'+$('#edit-height').data('old')+'</span></td>'
+      + '<td><span data-name="resize" data-val="'+$('#edit-resize').data('old')+'">'+resize[$('#edit-resize').data('old')]+'</span></td>'
+      + '<td><span data-name="address">'+$('#edit-address').data('old')+'</span><div class="float-right"><i class="icon-edit control"></i> <i class="icon-trash control"></i></div></td>'
+      + '</tr>'
+    );
+  });
+
+
+
+  /**
+   * Save TImage settings
+   */
+  $('#TImageSettings .save-settings').live('click', function() {
+    var save   = true,
+        $tr    = $(this).closest('tr'),
+        resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
+
+    if ($('#edit-width').val() == '') {save = false;}
+    if ($('#edit-height').val() == '') {save = false;}
+
+    if (save) {
+      $.ajax({
+        type: "POST",
+        data: {
+          parent_id : $('#TImageSettings').data('id'),
+          id        : $tr.data('id'),
+          width     : $('#edit-width').val(),
+          height    : $('#edit-height').val(),
+          psevdo    : $('#edit-psevdo').val(),
+          resize    : $('#edit-resize').val(),
+          path      : $('#edit-address').val()
+        },
+        url: "/api.post/structure_panel.save_image_settings",
+        success: function(msg){
+          $alert('Настройка успешно сохранена', 'success');
+
+          $tr.replaceWith(
+              '<tr data-id="'+$tr.data('id')+'" class="timage-rule">'
+            + '<td><span data-name="psevdo">'+$('#edit-psevdo').val()+'</span></td>'
+            + '<td><span data-name="width">'+$('#edit-width').val()+'</span></td>'
+            + '<td><span data-name="height">'+$('#edit-height').val()+'</span></td>'
+            + '<td><span data-name="resize" data-val="'+$('#edit-resize').val()+'">'+resize[$('#edit-resize').val()]+'</span></td>'
+            + '<td><span data-name="address">'+$('#edit-address').val()+'</span><div class="float-right"><i class="icon-edit control"></i> <i class="icon-trash control"></i></div></td>'
+            + '</tr>'
+          );
+        }
+      });
+    }
+  });
+
+
+
+  /**
+   * Вызов диалога создания модели
+   */
+  $('#create-model').live('click', function() {
+    $('#model-create-modal').modal('show');
+  });
+
+
+
+  /**
+   * Отмена создания модели
+   */
+  $('#cancel-model-btn').live('click', function() {
+    $('#model-create-modal input').val('');
+    $('#model-create-modal').modal('hide');
+  });
+
+
+
+  /**
+   * Создание модели
+   */
+  $('#create-model-btn').live('click', function() {
+    var save = true;
+
+    if ($('#model-title').val() == '') {save = false;}
+    if ($('#model-call').val() == '') {save = false;}
+
+    if (save) {
+      $.ajax({
+        type: "POST",
+        data: {
+          title : $('#model-title').val(),
+          name  : $('#model-call').val()
+        },
+        url: "/api.post/structure_panel.create_model",
+        success: function(msg) {
+          $parent = $('#model_tree ul');
+          $parent.append(
+            '<li><a href="#" data-id="' + msg + '" data-no-ajax="true">' +
+            '<div class="title"><i class="icon-file"></i> ' +
+            $('#model-title').val() +
+            '</div><div class="control">' +
+            '<i class="icon-edit"></i><i class="icon-trash"></i></div></a></li>'
+          );
+
+          $('#cancel-model-btn').click();
+          $('a[data-id="'+msg+'"] .icon-edit').click();
+          $alert('Модель успешно создана', 'success');
+        }
+      });
+    }
+  });
+
+
+
+  /**
+   * Отмена редактирования модели
+   */
+  $('#model-cancel').live('click', function() {
+    $('#model-content').html('');
+    return false;
+  });
+
+
+
+  /**
+   * Сохранение модели
+   */
+  $('#model-save').live('click', function() {
+    $.ajax({
+      type: "POST",
+      data: {
+        title : $('#title').val(),
+        name  : $('#name').val(),
+        id    : $('#model-id').val()
+      },
+      url: "/api.post/structure_panel.update_model",
+      success: function() {
+        $('#model_tree a[data-id="'+$('#model-id').val()+'"]').html(
+          '<div class="title"><i class="icon-file"></i> ' +
+          $('#title').val() +
+          '</div><div class="control">' +
+          '<i class="icon-edit"></i><i class="icon-trash"></i></div>'
+        );
+        $alert('Модель успешно сохранена', 'success');
+      }
+    });
+    return false;
+  });
+
 
 
   $('.close-dialog').live('click', function() {

@@ -3,7 +3,7 @@
       method  = "post"
       action  = "/panel/structure?action=editElementSCR&amp;author=admin">
   <fieldset>
-    <input name="id" type="hidden" value="${id}" />
+    <input name="id" type="hidden" value="${id}" id="model-id" />
     <legend>
       ${title}
       <div class="info">
@@ -67,10 +67,8 @@
 
     </div>
     <div class="form-actions">
-      <button type="submit" id="content-save" class="btn btn-primary">Сохранить</button>
-      <button class="btn" id="content-cancel">Отменить</button>
+      <button type="submit" id="model-save" class="btn btn-primary">Сохранить</button>
+      <button class="btn" id="model-cancel">Отменить</button>
     </div>
   </fieldset>
 </form>
-
-

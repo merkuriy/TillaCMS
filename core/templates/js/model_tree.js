@@ -124,8 +124,7 @@ $.model_tree = function(options){
         function() {
           $.ajax({
             type: "GET",
-            url: "../core/admin.php",
-            data: "/api.post/structure_panel.model_remove&id="+self.closest('a').data('id'),
+            url: "/api.post/structure_panel.model_remove?id="+self.closest('a').data('id'),
             success: function(msg){
               $alert('Удаление успешно завершено!', 'success');
               self.closest('li').remove();

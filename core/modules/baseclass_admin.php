@@ -4,7 +4,7 @@
  *	класс BaseClass с набором системных методов
  */
 class modules_baseclass_admin{
-	const TITLE = 'Базовые классы';
+	const TITLE = 'Модели';
 	const POSITION = '2';
 
 

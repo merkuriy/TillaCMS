@@ -4,7 +4,7 @@
  *	класс Structure с набором системных методов
  */
 class modules_structure_admin{
-	const TITLE = 'Структура';
+	const TITLE = 'Контент';
 	const POSITION = '1';
 
 

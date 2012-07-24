@@ -358,10 +358,9 @@
 
 
     /**
-     *
+     * Removing model
      */
     public function model_remove($data) {
-
       $id = $data['id'];
       // Выбираем элементы структуры основанные на данном базовом классе 
       $sql = sys::sql("SELECT
@@ -418,6 +417,81 @@
       eval('$data = components_'.$component.'::editSettings($id);');
 
       echo json_encode($data);
+    }
+
+
+
+    /**
+     * Save image settings
+     */
+    function save_image_settings($POST){
+      $result = sys::sql("
+        UPDATE `prefix_ImageSettings` SET
+          `width` = '".$POST['width']."',
+          `height` = '".$POST['height']."',
+          `logo` = '".$POST['logo']."',
+          `logowidth` = '".$POST['logow']."',
+          `logoheight` = '".$POST['logoh']."',
+          `psevdo` = '".$POST['psevdo']."',
+          `cropw` = '".$POST['cropw']."',
+          `croph` = '".$POST['croph']."',
+          `resize` = '".$POST['resize']."',
+          `path` = '".$POST['path']."'
+          WHERE `id` ='".$POST['id']."' LIMIT 1 ;",0);
+      print_r($POST);
+    }
+  
+  
+    function create_image_settings($POST){
+      $result = sys::sql("
+        INSERT INTO `prefix_ImageSettings` (`id`,`parent_id`,`width`,`height`,`logo`,`logowidth`,`logoheight`,`psevdo`,`cropw`,`croph`,`resize`,`path`)
+        VALUES (
+          '',
+          '".$POST['parent_id']."',
+          '".$POST['width']."',
+          '".$POST['height']."',
+          '".$POST['logo']."',
+          '".$POST['logow']."',
+          '".$POST['logoh']."',
+          '".$POST['psevdo']."',
+          '".$POST['cropw']."',
+          '".$POST['croph']."',
+          '".$POST['resize']."',
+          '".$POST['path']."'
+        );",0);
+
+      echo mysql_insert_id();
+    }
+  
+
+    function remove_image_settings($data){
+      $id = $data['id'];
+      $result = sys::sql("DELETE FROM `prefix_ImageSettings` WHERE `id` = '$id' LIMIT 1;",0);
+    }
+
+
+
+    function create_model($data) {
+      $sql = sys::sql("
+        INSERT INTO `prefix_ClassSections`
+        VALUES ('','0','".$data['name']."','".$data['title']."','type','')
+      ;",0);
+
+      echo mysql_insert_id();
+    }
+
+
+
+    function update_model($data) {
+      $sql = sys::sql("
+        UPDATE
+          `prefix_ClassSections`
+        SET
+          `title` = '".$data['title']."',
+          `name` = '".$data['name']."'
+        WHERE
+          `id` = '".$data['id']."'
+      ;", 0);
     }
   }
 ?>

@@ -245,3 +245,42 @@ i.control{
 .tselect-settings{
 	margin-bottom: 0;
 }
+
+#TImageSettings{
+	width: 760px;
+	margin-left: -380px;
+}
+
+#TImageSettings table input{
+	margin-bottom: 0;
+}
+
+#TImageSettings input{
+	width: 100px;
+	margin-bottom: 0px;
+}
+#TImageSettings select{
+	width: 155px;
+	margin-bottom: 0px;
+}
+#TImageSettings .ta-center{
+	text-align: center;
+}
+#TImageSettings .controlField{
+	width: 110px;
+}
+.timage-psevdo{
+	width: 110px;
+}
+.timage-width{
+	width: 110px;
+}
+.timage-height{
+	width: 110px;
+}
+.timage-resize{
+	width: 155px;
+}
+.timage-address{
+
+}
