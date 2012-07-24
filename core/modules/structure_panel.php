@@ -471,6 +471,50 @@
 
 
 
+    function save_hidden_settings($data) {
+      $id = $data['id'];
+      $value=sys::sql("SELECT `value` FROM `prefix_THidden_Settings` WHERE `parent_id`='$id';",0);
+      if (mysql_num_rows($value)==0){
+        $result=sys::sql("INSERT INTO `prefix_THidden_Settings` VALUES ('','$id','".$data['value']."')",0);
+      }else{
+        $result=sys::sql("UPDATE `prefix_THidden_Settings` SET `value`='".$data['value']."' WHERE `parent_id`='$id';",0);
+      }
+      echo 'Сохранение прошло успешно!';
+    }
+
+
+
+    function save_select_settings($data) {
+      $id = $data['id'];
+      $value=sys::sql("SELECT `title` FROM `prefix_TSelect_Settings` WHERE `parent_id`='$id' AND `name`='".$data['name']."';",0);
+      if (mysql_num_rows($value)==0){
+        $result=sys::sql("INSERT INTO `prefix_TSelect_Settings` VALUES ('','$id','".$data['title']."','".$data['name']."')",0);
+      }else{
+        $result=sys::sql("UPDATE `prefix_TSelect_Settings` SET `title`='".$data['tile']."' WHERE `parent_id`='$id' AND `name`='".$data['name']."';",0);
+      }
+      echo mysql_insert_id();
+    }
+
+
+
+    function remove_select_settings($data) {
+      $id = $data['id'];
+      $result = sys::sql("DELETE FROM `prefix_TSelect_Settings` WHERE `id` = '$id' LIMIT 1;",0);
+    }
+
+
+
+    function save_text_settings($data) {
+      $id = $data['id'];
+      sys::sql("
+        INSERT INTO `prefix_TTextSettings` (`id`,`type`)
+        VALUES ($id,'".$data['type']."')
+        ON DUPLICATE KEY UPDATE `type`='".$data['type']."';
+      ;",0);
+    }
+
+
+
     function create_model($data) {
       $sql = sys::sql("
         INSERT INTO `prefix_ClassSections`

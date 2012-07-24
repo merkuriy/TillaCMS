@@ -639,4 +639,97 @@ $().ready(function() {
   $('.close-dialog').live('click', function() {
     $(this).closest('.modal').modal('hide');
   });
+
+
+
+  /**
+   * Save THidden settings
+   */
+  $('#model-thidden-settings-submit').live('click', function() {
+    $.ajax({
+      type: "POST",
+      data: {
+        id    : $('#THiddenSettings').data('id'),
+        value : $('#model-thidden-default').val()
+      },
+      url: "/api.post/structure_panel.save_hidden_settings",
+      success: function() {
+        $alert('Значение успешно сохранено', 'success');
+        $('#THiddenSettings').modal('hide');
+      }
+    });
+    return false;
+  });
+
+
+
+  /**
+   * Add TSelect setting
+   */
+  $('#TSelectSettings .icon-plus').live('click', function() {
+    $.ajax({
+      type: "POST",
+      data: {
+        id    : $('#TSelectSettings').data('id'),
+        title : $('#model-tselect-visible').val(),
+        name  : $('#model-tselect-system').val()
+      },
+      url: "/api.post/structure_panel.save_select_settings",
+      success: function(msg) {
+        $alert('Значение успешно сохранено', 'success');
+        $('#model-tselect-values').append(
+            '<tr data-id="'+msg+'"><td>'
+          + $('#model-tselect-visible').val()
+          + '</td><td>'
+          + $('#model-tselect-system').val()
+          + '</td><td class="width14"><i class="icon-trash control"></i></td></tr>'
+        );
+
+        $('#model-tselect-visible').val('');
+        $('#model-tselect-system').val('');
+      }
+    });
+  });
+
+
+
+  /**
+   * Remove TSelect settings
+   */
+  $('#TSelectSettings .icon-trash').live('click', function() {
+    var $tr = $(this).closest('tr'),
+        $id = $tr.data('id');
+
+    $.ajax({
+      type: "POST",
+      data: {
+        id    : $id
+      },
+      url: "/api.post/structure_panel.remove_select_settings",
+      success: function(msg) {
+        $alert('Значение успешно сохранено', 'success');
+        $tr.remove();
+      }
+    });
+  });
+
+
+
+  /**
+   * Save TText settings
+   */
+  $('#model-ttext-settings-submit').live('click', function() {
+    $.ajax({
+      type: "POST",
+      data: {
+        id    : $('#TTextSettings').data('id'),
+        type  : $('#model-ttext-type').val()
+      },
+      url: "/api.post/structure_panel.save_text_settings",
+      success: function(msg) {
+        $alert('Значение успешно сохранено', 'success');
+        $('#TTextSettings').modal('hide');
+      }
+    });
+  });
 });
