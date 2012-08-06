@@ -106,10 +106,12 @@ class admin{
                         eval('$moduleTitle = modules_'.$MLink[0].'_admin::TITLE;'); 
                         // Запрашиваем позицию 
                         eval('$position = modules_'.$MLink[0].'_admin::POSITION;'); 
-                        // Записываем в массив название 
-                        $links[$position]['title']=$moduleTitle; 
-                        // Записываем в массив ссылку 
-                        $links[$position]['link']=$MLink[0]; 
+                        if ($moduleTitle != 'Пользователи' && $moduleTitle != 'Обновление') {
+	                        // Записываем в массив название 
+	                        $links[$position]['title']=$moduleTitle; 
+	                        // Записываем в массив ссылку 
+	                        $links[$position]['link']=$MLink[0]; 
+	                    }
                     } 
                     $x++;
                 }

@@ -105,6 +105,7 @@
       $param['name']       = '';
       $param['title']      = '';
       $param['pos']        = '';
+      $param['parent_id']  = '';
 
       $node = modules_structure_sys::get($param);
       $node = $node[0];
@@ -120,12 +121,36 @@
       $values = modules_structure_sys::get($node);
       $values = $values[0];
 
+      if ($values['id'] != 1){
+        $parentID = $node['parent_id'];
+        $adres = '/'.$node['name'];
+        while($parentID!=0){
+          $sql = sys::sql("
+            SELECT
+              sect.`name`,
+              sect.`parent_id`
+            FROM
+              `prefix_Sections` sect
+            WHERE
+              sect.`id` = '$parentID'
+          ",0);
+          $URL_datas = mysql_fetch_array($sql);
+          if ($parentID!='1'){
+            $adres = '/'.$URL_datas['name'].$adres;
+          }
+          $parentID = $URL_datas['parent_id'];
+        }
+      }else{
+        $adres = '/';
+      }
+
       $out = array(
         'id'          => $values['id'],
         'name'        => $node['name'],
         'title'       => $node['title'],
         'base_class'  => $base_class,
-        'pos'         => $node['pos']
+        'pos'         => $node['pos'],
+        '_url'        => $adres
       );
 
       if (isset($base_class['attr'])) {

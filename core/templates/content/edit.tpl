@@ -7,7 +7,7 @@
     <legend>
       ${title}
       <div class="info">
-        <strong>URI:</strong> <a href="#">${name}</a>,
+        <strong>URI:</strong> <a href="${_url}">${name}</a>,
         <strong>ID:</strong> ${id},
         <strong>MODEL:</strong> <a href="#">${base_class.title}</a>
       </div>

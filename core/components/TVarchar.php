@@ -48,11 +48,19 @@ class components_TVarchar{
 	//=====================================
 	//Функция сохранения данных
 	function save($POST,$FILES, $param=''){
-    $result = sys::sql("SELECT `data` FROM `prefix_TVarchar` WHERE `name`='".$POST['dataName']."' AND `parent_id`='".$POST['parent_id']."';",0);
-    if (mysql_num_rows($result)==0){
-      $POST['parentId']=$POST['parent_id'];
-      components_TVarchar::createStr($POST);
-    }
+	    $result = sys::sql("SELECT `data` FROM `prefix_TVarchar` WHERE `name`='".$POST['dataName']."' AND `parent_id`='".$POST['parent_id']."';", 1);
+
+	    if (empty($result)){
+	    	$POST['parentId']=$POST['parent_id'];
+	    	components_TVarchar::createStr($POST);
+	    }
+
+	    $res = sys::sql("SELECT `base_class` FROM `prefix_Sections` WHERE `id` = '".$POST['parent_id']."'", 1);
+
+	    if ($POST['dataName'] == 'password' && $res[0]['base_class'] == 4 && $result[0]['data'] != $POST['data']) {
+	    	$POST['data'] = md5($POST['data']);
+	    }
+
 		$result = sys::sql("UPDATE `prefix_TVarchar` SET `data` = '".$POST['data']."' WHERE `name`='".$POST['dataName']."' AND `parent_id`='".$POST['parent_id']."';",0);
 		if ($param=='client'){return;} else {}
 	}
