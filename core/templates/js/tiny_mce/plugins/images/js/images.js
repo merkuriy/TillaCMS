@@ -636,7 +636,7 @@ $(function(){
 	
 	//SWFUpload загрузка
 	swfu = new SWFUpload({
-		flash_url : "/css_js/swfupload/Flash/swfupload.swf",
+		flash_url : "/core/templates/plugins/swfupload/Flash/swfupload.swf",
 		upload_url: "connector/php/index.php",	// Relative to the SWF file
 		post_params: {
 			//"PHPSESSID" : "NONE",

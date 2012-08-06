@@ -537,5 +537,62 @@
           `id` = '".$data['id']."'
       ;", 0);
     }
+
+
+
+    function get_settings() {
+      $result = sys::sql("SELECT `id`,`name`,`value` FROM `prefix_Settings` ORDER BY `id`", 0);
+
+      if (mysql_num_rows($result)>0){
+        while($row = mysql_fetch_array($result)){
+          $out[] = $row;
+        }
+      }
+
+      echo json_encode($out);
+    }
+
+
+
+    function remove_settings($data) {
+      $id = $data['id'];
+
+      $sql = sys::sql("DELETE
+              FROM
+                `prefix_Settings`
+              WHERE
+                `id` = '$id'
+              LIMIT 1
+      ;",0);
+    }
+
+
+
+    function update_settings($data) {
+      $result = sys::sql("UPDATE `prefix_Settings` SET `value` = '".$data['value']."', `name` = '".$data['name']."' WHERE `id` ='".$data['id']."' LIMIT 1 ;",0);
+    }
+
+
+
+    function create_settings($data) {
+      $sql = sys::sql("INSERT
+              INTO
+                `prefix_Settings`
+              VALUES
+                (
+                  '',
+                  '".$data['name']."',
+                  '".$data['value']."'
+                )
+      ;",0);
+
+      echo json_encode(
+        array(
+          'id'    => mysql_insert_id(),
+          'name'  => $data['name'],
+          'value' => $data['value']
+        )
+      );
+    }
   }
 ?>

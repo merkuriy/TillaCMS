@@ -65,6 +65,24 @@ var $confirm = function(header, message, trueText, falseText, trueFunction, fals
   $('#confirm-modal').modal();
 }
 
+
+/**
+ * Loading settings
+ */
+var $load_settings = function() {
+  $.ajax({
+    url: "/api.post/structure_panel.get_settings",
+    dataType: 'json',
+    success: function(data) {
+      var $td = '<tr data-id="${id}"><td>${name}</td><td><span>${value}</span><div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>';
+      $('#settings-rows').html();
+      $.template('td', $td);
+      $.tmpl("td", data).appendTo("#settings-rows");
+    }
+  });
+}
+
+
 $().ready(function() {
 
   /**
@@ -730,6 +748,128 @@ $().ready(function() {
         $alert('Значение успешно сохранено', 'success');
         $('#TTextSettings').modal('hide');
       }
+    });
+  });
+
+
+
+  /**
+   * Remove site settings
+   */
+  $('#settings-rows .icon-trash').live('click', function() {
+    var self = $(this);
+    $confirm(
+      'Удаление настройки',
+      'Вы действительно хотите удалить данную настройку?',
+      'Да, удалить',
+      'Нет, отменить',
+      function() {
+        $.ajax({
+          type: "GET",
+          url: "/api.post/structure_panel.remove_settings?id="+self.closest('tr').data('id'),
+          success: function(msg){
+            $alert('Удаление успешно завершено!', 'success');
+            self.closest('tr').remove();
+          }
+        });
+      },
+      function() {
+        $alert('Удаление отменено', 'success');
+      }
+    );
+  });
+
+
+
+  /**
+   * Edit site settings
+   */
+  $('#settings-rows .icon-edit').live('click', function() {
+    var self     = $(this).closest('tr'),
+        name     = self.find('td:eq(0)'),
+        val      = self.find('span'),
+        cont     = self.find('div'),
+        old_name = name.text(),
+        old_val  = val.text();
+
+    name.html('<input type="text" value="'+old_name+'" data-val="'+old_name+'" class="name" />');
+    val.html('<input type="text" value="'+old_val+'" data-val="'+old_val+'" class="val" />');
+    self.find('input').css('margin-bottom', '0');
+    cont.html('<i class="icon-ok"></i><i class="icon-remove"></i>');
+  });
+
+
+
+  /**
+   * Cancel edit site settings
+   */
+  $('#settings-rows .icon-remove').live('click', function() {
+    var self     = $(this).closest('tr'),
+        name     = self.find('td:eq(0)'),
+        val      = self.find('span'),
+        cont     = self.find('div'),
+        old_name = name.find('input').data('val'),
+        old_val  = val.find('input').data('val');
+
+    name.html(old_name);
+    val.html(old_val);
+    cont.html('<i class="icon-edit"></i><i class="icon-trash"></i>');    
+  });
+
+
+
+  /**
+   * Save edit site settings
+   */
+  $('#settings-rows .icon-ok').live('click', function() {
+    var self     = $(this).closest('tr'),
+        name     = self.find('td:eq(0)'),
+        val      = self.find('span'),
+        cont     = self.find('div'),
+        old_name = name.find('input').val(),
+        old_val  = val.find('input').val();
+
+    $.ajax({
+      type: "GET",
+      url: "/api.post/structure_panel.update_settings?id="+self.data('id'),
+      data : {
+        name  : old_name,
+        value : old_val
+      },
+      success: function(msg){
+        $alert('Сохранение успешно завершено!', 'success');
+        name.html(old_name);
+        val.html(old_val);
+        cont.html('<i class="icon-edit"></i><i class="icon-trash"></i>');
+      }
+    });
+  });
+
+
+
+  /**
+   * Save edit site settings
+   */
+  $('#settings .icon-plus').live('click', function() {
+    var name     = $('#settings-name').val(),
+        val      = $('#settings-val').val();
+
+    $.ajax({
+      type: "POST",
+      url: "/api.post/structure_panel.create_settings",
+      data : {
+        name  : name,
+        value : val
+      },
+      success: function(msg){
+        $alert('Сохранение успешно завершено!', 'success');
+        $("#settings-rows").append(
+          '<tr data-id="'+msg.id+'"><td>'+msg.name+'</td><td><span>'+msg.value+'</span><div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>'
+        );
+        $('#settings-name').val('');
+        $('#settings-val').val('');
+      },
+      dataType : 'JSON'
     });
   });
 });

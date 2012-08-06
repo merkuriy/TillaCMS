@@ -42,6 +42,9 @@ class components_TDate{
 			$POST['parentId']=$POST['parent_id'];
 			components_TDate::createStr($POST);
 		}
+		$date = explode(' ', $POST['data']);
+		$date2 = explode('.', $date[0]);
+		$POST['data'] = $date2[2].'-'.$date2[1].'-'.$date2[0].' '.$date[1];
 		$result = sys::sql("UPDATE `prefix_TDate` SET `data` = '".$POST['data']."' WHERE `name`='".$POST['dataName']."' AND `parent_id`='".$POST['parent_id']."';",0);
 		if ($param=='client'){
 			return;

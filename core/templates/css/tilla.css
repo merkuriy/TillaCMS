@@ -284,3 +284,7 @@ i.control{
 .timage-address{
 
 }
+
+#settings input{
+	margin-bottom: 0px;
+}
