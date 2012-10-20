@@ -96,7 +96,7 @@ legend .info{
 	}
 
 .tree-container .buttons button{
-	width: 270px;
+	width: 100%;
 }
 
 .edit-form{
@@ -286,5 +286,9 @@ i.control{
 }
 
 #settings input{
+	margin-bottom: 0px;
+}
+
+legend{
 	margin-bottom: 0px;
 }

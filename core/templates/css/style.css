@@ -18,3 +18,8 @@
 #auth-form hr{
   margin: 6px 0px;
 }
+
+
+legend{
+  margin-bottom: 0px;
+}

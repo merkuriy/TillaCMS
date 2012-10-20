@@ -156,9 +156,10 @@
               </label>
             <div class="controls">
               <select id="model-ttext-type">
-                <option value="0">WYSIWYG редактор</option>
+                <option value="0">RedactorJS</option>
                 <option value="1">Простой редактор текста</option>
                 <option value="2">Редактор кода</option>
+                <option value="3">TinyMCE</option>
               </select>
             </div>
           </div>

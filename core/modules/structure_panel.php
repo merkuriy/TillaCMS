@@ -619,5 +619,46 @@
         )
       );
     }
+
+
+
+    function image_upload($data) {
+      if(is_uploaded_file($_FILES["file"]["tmp_name"])) {
+        move_uploaded_file($_FILES["file"]["tmp_name"], "../data/wysiwyg/".$_FILES["file"]["name"]);
+        echo '{"filelink":"/data/wysiwyg/'.$_FILES["file"]["name"].'"}';
+      } else {
+        echo("Ошибка загрузки файла");
+      }
+    }
+
+    function file_upload($data) {
+      if(is_uploaded_file($_FILES["file"]["tmp_name"])) {
+        move_uploaded_file($_FILES["file"]["tmp_name"], "../data/wysiwyg/".$_FILES["file"]["name"]);
+        echo '{"filelink":"/data/wysiwyg/'.$_FILES["file"]["name"].'","filename":"'.$_FILES["file"]["name"].'"}';  '{"filelink":"/data/wysiwyg/'.$_FILES["file"]["name"].'"}';
+      } else {
+        echo("Ошибка загрузки файла");
+      }
+    }
+
+    function get_images_list() {
+
+      if ($handle = opendir('../data/wysiwyg')) {
+        while (false !== ($entry = readdir($handle))) {
+          if ($entry != '.' && $entry != '..' && $entry != '.thumbs') {
+            $title = explode('.', $entry);
+            array_pop($title);
+            $title = implode(".", $title);
+            $out[] = array(
+              'thumb' => '/data/wysiwyg/'.$entry,
+              'image' => '/data/wysiwyg/'.$entry,
+              'title' => $title
+            );
+          }
+        }
+
+        closedir($handle);
+        echo json_encode($out);
+      }
+    }
   }
 ?>

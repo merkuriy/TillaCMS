@@ -58,6 +58,17 @@
     </div>
   </div>
 
+  <div id="TText3">
+    <div class="control-group">
+      <label class="control-label" for="field-${name}">
+        <span class="fieldLabel" rel="tooltip" data-original-title="%attr(${name})%">${title}</span>
+      </label>
+      <div class="controls">
+        <textarea class="span7 tinymce" id="field-${name}" name="${name}" rows="6">${value}</textarea>
+      </div>
+    </div>
+  </div>
+
   <div id="TVarchar">
     <div class="control-group">
       <label class="control-label" for="field-${name}">
@@ -105,8 +116,8 @@
         <span class="fieldLabel" rel="tooltip" data-original-title="%attr(${name})%">${title}</span>
       </label>
       <div class="controls">
-        <img src="${value}?v=1" class="image-preview" />
-        <input type="file" class="span7 image-input" id="field-${name}" name="${name}" />
+        <img src="${value}?v=1" class="image-preview" /> <i class="icon-remove remove-image" title="Удалить изображение"></i>
+        <input type="file" class="span6 image-input" id="field-${name}" name="${name}" />
       </div>
     </div>
   </div>

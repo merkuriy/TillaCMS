@@ -53,6 +53,10 @@ class modules_users_sys {
 				foreach($policy as $key => $val){
 					$_SESSION['user_policy'][$val] = true;
 				}
+				if ($_SESSION['user_group'] == 'root') {
+					header('location: /panel/structure');
+					return true;
+				}
 				if ($out==''){
 					if (isset($_SERVER[HTTP_REFERER])){
 						header('location:'.$_SERVER[HTTP_REFERER]);

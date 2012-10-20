@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>%title% - TillaCMS</title>
+    <title>TillaCMS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Le styles -->  
@@ -12,6 +12,7 @@
     <link type="text/css" href="/core/templates/css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
     <link type="text/css" href="/core/templates/css/jquery-ui-timepicker-addon.css" rel="stylesheet" />
     <link type="text/css" href="/core/templates/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/core/templates/js/redactor/redactor.css" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -80,6 +81,9 @@
     <script type="text/javascript" src="/core/templates/js/jquery-ui-1.8.20.custom.min.js"></script>
     <script type="text/javascript" src="/core/templates/js/jquery-ui-timepicker-addon.js"></script>
     <script type="text/javascript" src="/core/templates/js/jquery.mjs.nestedSortable.js"></script>
+    <script type="text/javascript" src="/core/templates/js/redactor/ru.js"></script>
+    <script type="text/javascript" src="/core/templates/js/redactor/fullscreen.js"></script>
+    <script type="text/javascript" src="/core/templates/js/redactor/redactor.js"></script>
     <!-- Third party script for BrowserPlus runtime (Google Gears included in Gears runtime now) -->
     <script type="text/javascript" src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>
     <!-- Load plupload and all it's runtimes and finally the jQuery queue widget -->
