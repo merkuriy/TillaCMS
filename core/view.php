@@ -5,7 +5,6 @@
  * движок
  */
 
-$start_script=gettimeofday();
 $CONF['colsql']=0;
 
 session_start();
@@ -110,10 +109,6 @@ $debug = ob_get_clean();
 
 
 
-$end_script=gettimeofday();
-$totaltime1 = (float)($end_script['sec'] - $start_script['sec']) + ((float)($end_script['usec'] - $start_script['usec'])/1000000);
-
-
 echo $resultHTML;
 
 view::debug_print( $debug );
@@ -199,10 +194,6 @@ class view {
 	function debug_print( $bufer )
 	{
 		global $totaltime1, $CONF;
-		
-		$file = fopen('../debug/main.txt', 'w+');
-		fwrite( $file, $bufer.'<br /><br />workTime='.$totaltime1.'<br /><br />sqlQuery='.$CONF['colsql'] );
-		fclose( $file);
 	}
 	
 }
