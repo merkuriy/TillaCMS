@@ -228,21 +228,6 @@ $.tree = function(options){
     });
 
 
-    /* Select node */
-    $(options.id + ' a').die('click');
-    $(options.id + ' a').live('click', function() {
-      $(options.id + ' .active').removeClass('active');
-      $(this).addClass('active');
-      return false;
-    });
-
-
-    /* Open node for edit */
-    $(options.id + ' a').die('dblclick');
-    $(options.id + ' a').live('dblclick', function() {
-      options.dblClick($(this).data('id'));
-    });
-
     $(options.id + ' .icon-edit').die('click');
     $(options.id + ' .icon-edit').live('click', function() {
       options.dblClick($(this).closest('a').data('id'));
@@ -282,6 +267,21 @@ $.tree = function(options){
     $(options.id + ' .icon-plus').die('click');
     $(options.id + ' .icon-plus').live('click', function() {
       $createContent($(this).closest('a').data('id'));
+    });
+
+    /* Select node */
+    $(options.id + ' a').die('click');
+    $(options.id + ' a').live('click', function() {
+      $(options.id + ' .active').removeClass('active');
+      $(this).addClass('active');
+      return false;
+    });
+
+
+    /* Open node for edit */
+    $(options.id + ' a').die('dblclick');
+    $(options.id + ' a').live('dblclick', function() {
+      options.dblClick($(this).data('id'));
     });
 
     /* Create first ul */

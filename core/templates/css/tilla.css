@@ -78,6 +78,13 @@ legend .info{
 				margin-left: -40px;
 				padding-left: 41px;
 			}
+			.tree li{
+				position: relative;
+				z-index: 100;
+			}
+			.tree .control{
+				margin-right: 10px;
+			}
 .searchContainer{
 	height: 0px;
 }
@@ -291,4 +298,8 @@ i.control{
 
 legend{
 	margin-bottom: 0px;
+}
+
+.redactor_editor{
+	width: 637px;
 }
