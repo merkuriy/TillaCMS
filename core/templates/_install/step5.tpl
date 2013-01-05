@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" dir="ltr">
 <head>  
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
-	<title>QPanel CMS - установка</title>  
+	<title>Tilla CMS - установка</title>
 </head>
 <body>
 	<div>
