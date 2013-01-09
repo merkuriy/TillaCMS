@@ -63,7 +63,7 @@ class admin{
 	// Функция замены значения
 	function replace($matches){
 
-		global $REPL,$find; 
+		global $REPL,$find;
 
 		$find = true;
 		if (isset($REPL[$matches[1]])){
@@ -78,72 +78,67 @@ class admin{
 
 
 
-	//==================================================================================================
-	// Функция формирования ссылок на модули
-	function getModulesLink(){
-		// Открываем папку modules
-		$handle=opendir('../core/modules');
+    /*
+     * Функция формирования ссылок на модули
+     */
+    function getModulesLink() {
 
-		$x = 0;
-		// Запускаем цикл чтения
-		while ($file = readdir($handle)) {
-			// Отсеиваем ярлыки на вышестоящие папки и выводим
-			if ($file=='..' or $file=='.' or $file[0]=='.'){} else {
-				// Отрезаем расширение
-				$MName = explode('.', $file);
-				// Отрезаем постфикс
-				$MLink=explode('_', $MName[0]);
-				// Запрашиваем название
-				if (file_exists('../core/modules/'.$MLink[0].'_admin.php')){ 
-                    if (class_exists('modules_'.$MLink[0].'_admin' ,true)){ 
-                        eval('$moduleTitle = modules_'.$MLink[0].'_admin::TITLE;'); 
-                        // Запрашиваем позицию 
-                        eval('$position = modules_'.$MLink[0].'_admin::POSITION;'); 
-                        if ($moduleTitle != 'Пользователи' && $moduleTitle != 'Обновление') {
-	                        // Записываем в массив название 
-	                        $links[$position]['title']=$moduleTitle; 
-	                        // Записываем в массив ссылку 
-	                        $links[$position]['link']=$MLink[0]; 
-	                    }
-                    } 
-                    $x++;
+        $modules = admin::modules();
+        foreach ($modules as $module) {
+            if ($module != 'users_admin' && $module != 'update_admin') {
+                $position = constant('modules_' . $module . '::POSITION');
+                $links[$position]['title'] = constant('modules_' . $module . '::TITLE');
+                $links[$position]['link'] = substr($module, 0, -6);
+            }
+        }
+
+        // Формируем строку ссылок
+        $link = '';
+        // TODO: лучше заменить использование ksort ручной сортировкой во время перебора модулей
+        ksort($links);
+        foreach ($links as $linkVal) {
+            $link .= '<li><a href="' . $linkVal['link'] . '">' . $linkVal['title'] . '</a></li>';
+        }
+        return $link;
+    }
+
+
+    /*
+     * Функция формирования списка модулей
+     */
+    function modules ($postfix = 'admin') {
+
+        $postfix = '_' . $postfix;
+        $modules = scandir('../core/modules');
+        unset($modules[0]); // "."
+        unset($modules[1]); // ".."
+        foreach ($modules as $keyModule => $module) {
+            if ($module[0] != '.') {
+                $module = basename($module, '.php');
+                if (substr($module, -6) == $postfix) {
+                    $modules[$keyModule] = $module;
+                } else {
+                    unset($modules[$keyModule]);
                 }
-			};
-
-		}
-		// Закрываем папку
-		closedir($handle);
-		ksort($links);
-		// Формируем строку ссылок
-		foreach ($links as $key => $value){
-			$id = str_replace("/", "", $links[$key]['link']);
-			// $link .= '<a id = "'.$id.'" class="linkMenu" href="'.$links[$key]['link'].'">'.$links[$key]['title'].'</a> ';
-			$link .= '<li><a href="'.$links[$key]['link'].'">'.$links[$key]['title'].'</a></li>';
-		}
-
-		return $link;
-	}
-	// Функция формирования ссылок на модули
-	//==================================================================================================
+            }
+        }
+        return $modules;
+    }
 
 
+    /*
+     * Функция формирования списка компонентов
+     */
+    function components() {
 
-
-	//==================================================================================================
-	// Функция формирования списка компонентов
-	function components(){
-		$handle=opendir('../core/components');
-		while ($file = readdir($handle)) {
-			if ($file==".." or $file=="."){} else {
-				$TName = explode(".", $file);
-				$component[]=$TName[0];
-			};
-		}
-		closedir($handle); 
-		return $component;
-	}
-	// Функция формирования списка компонентов
-	//==================================================================================================
+        $components = scandir('../core/components');
+        unset($components[0]); // "."
+        unset($components[1]); // ".."
+        foreach ($components as $keyComponent => $component) {
+            $components[$keyComponent] = basename($component, '.php');
+        }
+        return $components;
+    }
 
 
 
@@ -207,49 +202,39 @@ class admin{
 	//==================================================================================================
 
 
+    /*
+     * Функция создания таблиц компонентов и модуленй
+     */
+    function databaseWrite() {
 
+        global $CONF;
+        $CONF = sys::preLoad();
 
-	//==================================================================================================
-	// функция создания таблиц и записей
-	function databaseWrite() {
+        // Создание таблиц для модулей
+        modules_baseclass_admin::createTable();
+        modules_structure_admin::createTable();
 
-		global $CONF;
-		$CONF = sys::preLoad();
-
-		// Создание таблиц для модулей
-		modules_baseclass_admin::createTable();
-		modules_structure_admin::createTable();
-
-		$modules = scandir('../core/modules');
-		foreach ($modules as $module) {
-			if ($module[0] != '.') {
-				$module = basename($module, '.php');
-				if ($module != 'structure_admin' && $module != 'baseclass_admin' && substr($module, -6) == '_admin') {
-                    $module = 'modules_' . $module;
-                    if (method_exists($module, 'createTable')) {
-                        call_user_func(array($module, 'createTable'));
-                    }
-				}
-			}
-		}
-
-		// Создание таблиц для компонентов
-		$components = scandir('../core/components');
-		foreach ($components as $component) {
-			if ($component[0] != '.') {
-                $component = 'components_' . basename($component, '.php');
-                if (method_exists($component, 'createTable')) {
-                    call_user_func(array($component, 'createTable'));
+        $modules = admin::modules();
+        foreach ($modules as $module) {
+            if ($module != 'structure_admin' && $module != 'baseclass_admin') {
+                $module = 'modules_' . $module;
+                if (method_exists($module, 'createTable')) {
+                    call_user_func(array($module, 'createTable'));
                 }
-			}
-		}
+            }
+        }
 
-		admin::createAdmin();
-	}
-	// функция создания таблиц и записей
-	//==================================================================================================
+        // Создание таблиц для компонентов
+        $components = admin::components();
+        foreach ($components as $component) {
+            $component = 'components_' . $component;
+            if (method_exists($component, 'createTable')) {
+                call_user_func(array($component, 'createTable'));
+            }
+        }
 
-
+        admin::createAdmin();
+    }
 
 
 	//==================================================================================================
@@ -275,7 +260,7 @@ class admin{
                 PRIMARY KEY (`name`)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8
 		;",0);
-		
+
 		$sql = sys::sql("
             SELECT
                 *
@@ -428,7 +413,7 @@ class admin{
             ENGINE=MyISAM
             CHARACTER SET utf8 COLLATE utf8_general_ci
 		;",0);
-		
+
 		$sql = sys::sql("INSERT INTO
 							`prefix_key`
 						VALUES (
@@ -471,7 +456,7 @@ class admin{
 			$out = $out + $znak[$x];
 		}
 
-		$out = md5($out);	
+		$out = md5($out);
 
 		if ($out == $original) {
 			return true;
