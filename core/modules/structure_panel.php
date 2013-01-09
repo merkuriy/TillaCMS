@@ -44,18 +44,13 @@
     /**
      * Draw sub template
      */
-    public function draw_sub($tpl) {
+    public function draw_sub ($params) {
 
-      if (is_array($tpl)) {
-        $tpl     = $tpl['tpl'];
+      if (is_array($params) && isset($params['tpl'])) {
+          echo file_get_contents('templates/'. $params['tpl'] .'.tpl');
       }
 
-      $filename = 'templates/'.$tpl.'.tpl';
-      $handle   = fopen($filename, "r");
-      $tpl      = fread($handle, filesize($filename));
-      fclose($handle);
-
-      echo $tpl;
+      // TODO: error
     }
 
 
