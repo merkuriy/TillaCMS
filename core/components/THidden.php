@@ -193,4 +193,3 @@ class components_THidden {
 		echo 'Сохранение прошло успешно!';
 	}  
 }
-?>

@@ -13,6 +13,3 @@ class api_jsonrpc{
 		echo $server->parse();
 	}
 }
-
-
-?>

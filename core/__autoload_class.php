@@ -15,6 +15,3 @@ function __autoload($className) {
 		require_once '../core/'.$classa[0].'/'.$classa[1].'_'.$classa[2].'.php';
 	}
 }
-
-
-?>

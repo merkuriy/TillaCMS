@@ -20,4 +20,3 @@ class modules_settings_sys {
 	}
 
 }
-?>

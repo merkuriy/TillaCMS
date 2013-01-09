@@ -591,6 +591,5 @@ class modules_users_sys {
 			return '';
 		}
 	}
-// Конец класса
+
 }
-?>

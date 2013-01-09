@@ -155,6 +155,3 @@ class components_TNFiles {
 if (!file_exists('../data/files')) {
 	mkdir("../data/files", 0777);
 };
-
-
-?>

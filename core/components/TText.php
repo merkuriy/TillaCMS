@@ -188,4 +188,3 @@ class components_TText{
 	}
 	
 }
-?>

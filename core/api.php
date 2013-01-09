@@ -60,5 +60,3 @@ if (file_exists('api/'.api::$protocol.'.php')) {
 	// Выдаем ошибку 404
 	header('HTTP/1.1 404 Not Found');
 }
-
-?>

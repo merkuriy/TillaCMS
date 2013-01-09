@@ -570,6 +570,3 @@ $query=sys::sql("
 		PRIMARY KEY ( `id` )
 	) CHARACTER SET utf8 COLLATE utf8_general_ci
 ;",0);
-
-
-?>

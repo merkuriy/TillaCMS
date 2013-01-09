@@ -143,7 +143,3 @@ $query=sys::sql("
 		PRIMARY KEY  (`id`)
 	) ENGINE=MyISAM AUTO_INCREMENT=1 CHARACTER SET utf8 COLLATE utf8_general_ci AUTO_INCREMENT=1
 ;",0);
-
-
-
-?>

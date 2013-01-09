@@ -308,4 +308,3 @@ class modules_structure_navigate {
 	}
   
 }
-?>

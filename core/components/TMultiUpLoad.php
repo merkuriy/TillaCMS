@@ -94,5 +94,5 @@ class components_TMultiUpLoad{
 			}
 		}
 	}
+
 }
-?>

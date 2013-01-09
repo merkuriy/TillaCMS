@@ -112,4 +112,3 @@ class components_TVarchar{
 		return false;
 	}
 }
-?>

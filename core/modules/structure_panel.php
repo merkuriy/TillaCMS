@@ -1,4 +1,5 @@
 <?php
+
   class modules_structure_panel{
 
     /**
@@ -661,4 +662,3 @@
       }
     }
   }
-?>

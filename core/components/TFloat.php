@@ -92,4 +92,3 @@ class components_TFloat{
 		return false;
 	}
 }
-?>

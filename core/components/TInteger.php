@@ -91,5 +91,5 @@ class components_TInteger{
 	function condition($name,$parentId,$cond){
 		return false;
 	}
+
 }
-?>

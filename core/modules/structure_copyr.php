@@ -104,10 +104,5 @@ class modules_structure_copyr {
 			</div>';
 		
 	}
-	
-
 
 }
-
-
-?>
