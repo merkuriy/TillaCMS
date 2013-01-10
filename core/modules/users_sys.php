@@ -6,17 +6,17 @@
 class modules_users_sys {
 
 
-	//========================================
-	// Функция аторизации
-	function auth($POST,$out = ''){
-		// Узнаём идентификатор пользователя
-		$idSQL = sys::sql(
-			"
+    /*
+     * Функция аторизации
+     */
+    function auth($POST,$out = ''){
+
+        // Узнаём идентификатор пользователя
+        $idSQL = sys::sql(
+            "
 				SELECT
 					s.`id`,
-					vPass.`data` as `password`,
 					vGroup.`data` as `group`,
-					bActive.`data` as `active`,
 					p.`policy` as `policy`
 				FROM
 					`prefix_Sections` as s,
@@ -26,7 +26,8 @@ class modules_users_sys {
 					`prefix_TBoolev` as bActive,
 					`prefix_groups` as p
 				WHERE
-					s.`name`='".$POST['user_login']."' AND
+					s.`name`='{$POST['user_login']}' AND
+					vPass.`data`='".md5($_POST['user_password'])."' AND
 					s.`base_class`= c.id AND
 					c.`name` = 'user' AND
 					c.`type` = 'type' AND
@@ -36,39 +37,39 @@ class modules_users_sys {
 					vGroup.`parent_id` = s.id AND
 					bActive.`name` = 'active' AND
 					bActive.`parent_id` = s.id AND
+					bActive.`data` = 'true' AND
 					p.`name` = vGroup.`data`;
 			",
-		0);
-		if (mysql_num_rows($idSQL)>0){
-			$usersData=mysql_fetch_assoc($idSQL);
-			if ($usersData['password']==md5($_POST['user_password']) and $usersData['active']=='true'){
-				$_SESSION['user_ID']=$usersData['id'];
-				$_SESSION['user_login']=$_POST['user_login'];
-				$_SESSION['user_group']=$usersData['group'];
-				
-				// Загрузка политик доступа
-				$usersData['policy'] = str_replace('::',',',$usersData['policy']);
-				$usersData['policy'] = str_replace(':','',$usersData['policy']);
-				$policy = explode(',',$usersData['policy']);
-				foreach($policy as $key => $val){
-					$_SESSION['user_policy'][$val] = true;
-				}
-				if ($_SESSION['user_group'] == 'root') {
-					header('location: /panel/structure');
-					return true;
-				}
-				if ($out==''){
-					if (isset($_SERVER[HTTP_REFERER])){
-						header('location:'.$_SERVER[HTTP_REFERER]);
-					} else {
-						modules_Structure_admin::onLoad($_GET,$_POST,$_FILES);
-					}
-				}else{
-					header('location:'.$out);
-				}
-			}
-		}
-	}
+            0);
+
+        if (mysql_num_rows($idSQL)>0){
+            $usersData=mysql_fetch_assoc($idSQL);
+
+            $_SESSION['user_ID']=$usersData['id'];
+            $_SESSION['user_login']=$_POST['user_login'];
+            $_SESSION['user_group']=$usersData['group'];
+
+            // Загрузка политик доступа
+            $usersData['policy'] = str_replace('::',',',$usersData['policy']);
+            $usersData['policy'] = str_replace(':','',$usersData['policy']);
+            $policy = explode(',',$usersData['policy']);
+            foreach($policy as $val){
+                $_SESSION['user_policy'][$val] = true;
+            }
+            if ($_SESSION['user_group'] == 'root') {
+                header('location: /panel/structure');
+            } elseif ($out==''){
+                if (isset($_SERVER[HTTP_REFERER])){
+                    header('location: '.$_SERVER[HTTP_REFERER]);
+                } else {
+                    modules_Structure_admin::onLoad($_GET,$_POST,$_FILES);
+                }
+            }else{
+                header('location: '.$out);
+            }
+        }
+    }
+
   
   	//========================================
 	// Функция аторизации
