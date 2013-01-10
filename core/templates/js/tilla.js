@@ -128,16 +128,18 @@ var $confirm = function(header, message, trueText, falseText, trueFunction, fals
  * Loading settings
  */
 var $load_settings = function() {
-  $.ajax({
-    url: "/api.post/structure_panel.get_settings",
-    dataType: 'json',
-    success: function(data) {
-      var $td = '<tr data-id="${id}"><td>${name}</td><td><span>${value}</span><div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>';
-      $('#settings-rows').html();
-      $.template('td', $td);
-      $.tmpl("td", data).appendTo("#settings-rows");
-    }
-  });
+    $.ajax({
+        url: "/api.post/structure_panel.get_settings",
+        dataType: 'json',
+        success: function(data) {
+
+            $.template('td',
+                '<tr data-id="${id}"><td>${name}</td><td><span>${value}</span>' +
+                    '<div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>'
+            );
+            $.tmpl("td", data).appendTo("#settings-rows");
+        }
+    });
 }
 
 
