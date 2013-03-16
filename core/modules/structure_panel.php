@@ -47,7 +47,7 @@
     public function draw_sub ($params) {
 
       if (is_array($params) && isset($params['tpl'])) {
-          echo file_get_contents('templates/'. $params['tpl'] .'.tpl');
+        echo file_get_contents('templates/'. $params['tpl'] .'.tpl');
       }
 
       // TODO: error
@@ -109,7 +109,7 @@
       $base_class = modules_structure_panel::get_base_class($node['base_class']);
 
       if (isset($base_class['attr'])) {
-        foreach ($base_class['attr'] as $key => $value) {
+        foreach ($base_class['attr'] as $value) {
           $node[$value['name']] = '';
         }
       }
@@ -445,8 +445,9 @@
     /**
      * Save image settings
      */
-    function save_image_settings($POST){
-      $result = sys::sql("
+    function save_image_settings ($POST) {
+
+      sys::sql("
         UPDATE `prefix_ImageSettings` SET
           `width` = '".$POST['width']."',
           `height` = '".$POST['height']."',
@@ -458,14 +459,20 @@
           `croph` = '".$POST['croph']."',
           `resize` = '".$POST['resize']."',
           `path` = '".$POST['path']."'
-          WHERE `id` ='".$POST['id']."' LIMIT 1 ;",0);
-      print_r($POST);
+        WHERE `id` = '".$POST['id']."'
+        LIMIT 1
+      ;", 0);
+
+      echo '1';
     }
   
   
-    function create_image_settings($POST){
-      $result = sys::sql("
-        INSERT INTO `prefix_ImageSettings` (`id`,`parent_id`,`width`,`height`,`logo`,`logowidth`,`logoheight`,`psevdo`,`cropw`,`croph`,`resize`,`path`)
+    function create_image_settings ($POST) {
+
+      sys::sql("
+        INSERT INTO `prefix_ImageSettings` (
+          `id`,`parent_id`,`width`,`height`,`logo`,`logowidth`,`logoheight`,`psevdo`,`cropw`,`croph`,`resize`,`path`
+        )
         VALUES (
           '',
           '".$POST['parent_id']."',
@@ -479,15 +486,16 @@
           '".$POST['croph']."',
           '".$POST['resize']."',
           '".$POST['path']."'
-        );",0);
+        )
+      ;", 0);
 
       echo mysql_insert_id();
     }
   
 
-    function remove_image_settings($data){
+    function remove_image_settings ($data) {
       $id = $data['id'];
-      $result = sys::sql("DELETE FROM `prefix_ImageSettings` WHERE `id` = '$id' LIMIT 1;",0);
+      sys::sql("DELETE FROM `prefix_ImageSettings` WHERE `id` = '$id' LIMIT 1;", 0);
     }
 
 

@@ -538,8 +538,8 @@ class components_TImage {
 
 
 
-
 // Инициализация компонента
+// TODO: это лучше делать только на стороне админки, или как то подругому ограничить частоту вызова
 
 if (!file_exists('../data/images')) {
 	mkdir("../data/images", 0777);
@@ -556,17 +556,18 @@ $query=sys::sql("
 
 $query=sys::sql("	
 	CREATE TABLE IF NOT EXISTS `prefix_ImageSettings` (
-		`id` INT NOT NULL AUTO_INCREMENT ,
-		`parent_id` INT( 11 ) NOT NULL ,
-		`width` INT( 5 ) NOT NULL ,
-		`height` INT( 5 ) NOT NULL ,
-		`logo` VARCHAR( 255 ) NOT NULL ,
-		`logowidth` VARCHAR( 255 ) NOT NULL ,
-		`logoheight` VARCHAR( 255 ) NOT NULL ,
-		`psevdo` VARCHAR( 255 ) NOT NULL ,
-		`cropw` VARCHAR( 10 ) NOT NULL ,
-		`croph` VARCHAR( 10 ) NOT NULL ,
-		`resize` INT( 1 ) NOT NULL ,
+		`id` INT NOT NULL AUTO_INCREMENT,
+		`parent_id` INT( 11 ) NOT NULL,
+		`width` INT( 5 ) NOT NULL,
+		`height` INT( 5 ) NOT NULL,
+		`logo` VARCHAR( 255 ) NOT NULL,
+		`logowidth` VARCHAR( 255 ) NOT NULL,
+		`logoheight` VARCHAR( 255 ) NOT NULL,
+		`psevdo` VARCHAR( 255 ) NOT NULL,
+		`cropw` VARCHAR( 10 ) NOT NULL,
+		`croph` VARCHAR( 10 ) NOT NULL,
+		`resize` INT( 1 ) NOT NULL,
+		`path` VARCHAR( 255 ) NOT NULL DEFAULT  '',
 		PRIMARY KEY ( `id` )
 	) CHARACTER SET utf8 COLLATE utf8_general_ci
 ;",0);

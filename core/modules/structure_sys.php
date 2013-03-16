@@ -72,7 +72,8 @@ class modules_structure_sys {
 	
 	//===================================
 	// Функция пакетного получения данных
-	function get($request){
+	function get($request) {
+
 		// Формируем массивы
 		$searchSect	= array();
 		$searchComp	= array();
@@ -85,10 +86,10 @@ class modules_structure_sys {
 		
 		global $system;
 		// Обходим входной массив и разбиваем искомые данные и ключи поиска
-		foreach($request as $key=>$value) {
+		foreach ($request as $key=>$value) {
 			// Проверяем принадлежность ключа к таблице Sections
-			if ($key=='id' or $key=='name' or $key=='title' or $key=='parent_id' or $key=='base_class' or $key == 'pos'){
-				$key = 'sections.'.$key;
+			if ($key=='id' or $key=='name' or $key=='title' or $key=='parent_id' or $key=='base_class' or $key == 'pos') {
+				$key = 'sections.`'.$key.'`';
 				if ($value == 'null' or $value == '') {
 					$searchSect[$key] = '';
 				}else{
@@ -105,30 +106,30 @@ class modules_structure_sys {
 		}
 
 		// Если необходимы данные из компонентов и не указан базовый класс
-		if ($needDataFromComponent and !isset($params['sections.base_class'])){
+		if ($needDataFromComponent and !isset($params['sections.base_class'])) {
 			// Выводим ошибку
 			return "Для выполнения операции, требуется указать базовый класс!";
-		}else{
+		} else {
 			// Поиск толко по Структуре
 			// Формируем секцию Select
-			foreach($searchSect as $key=>$value){
+			foreach ($searchSect as $key => $value) {
 				$sqlSelect .= ', '.$key;
 			}
 			// Формируем секцию Where
-			foreach($params as $key=>$value){
+			foreach ($params as $key => $value) {
 				if ($sqlWhere==' WHERE '){
 					$append = '';
 				}else{
 					$append = ' AND ';
 				}
-				if (is_array($value)){
+				if (is_array($value)) {
 					$sqlWhere .= $append.'(';
 					$count = count($value);
 					$i = 0;
-					foreach($value as $key2=>$value2){
+					foreach($value as $key2=>$value2) {
 						$sqlWhere .= ' '.$key.' = "'.$value2.'"';
 						$i++;
-						if ($i<$count){
+						if ($i < $count){
 							$sqlWhere .= ' OR ';
 						}
 					}
@@ -147,20 +148,23 @@ class modules_structure_sys {
 			$tempSections = sys::sql($query,1);
 
 			// Запускаем поиск по компонентам
-			if ($needDataFromComponent){
+			if ($needDataFromComponent) {
 				// Выбираем базовый класс
 				$sql = sys::sql("SELECT name,value FROM prefix_ClassSections WHERE `parent_id`='".$request['base_class']."' AND `type`='attr'",1);
 				// Формируем массив атрибутов и компонентов БК
-				foreach($sql as $key=>$value){
+				foreach ($sql as $value) {
 					$components[$value['name']] = $value['value'];
 				}
 				// Выбираем необходимые компоненты
 				$i = 0;
-				foreach($tempSections as $val){
-					foreach($searchComp as $key=>$value){
-						$tempName = explode('.',$key);
+				foreach ($tempSections as $val) {
+					foreach ($searchComp as $key=>$value) {
+						$tempName = explode('.', $key, 2);
 						$system['section'][$tempSections[$i]['id']]['base_class'] = $request['base_class'];
-						eval('$tempValue = components_'.$components[$tempName[0]].'::view("'.$tempName[0].'",'.$tempSections[$i]['id'].',"'.$tempName[1].'");');
+                        $tempValue = call_user_func(
+                          array('components_'.$components[$tempName[0]], 'view'),
+                          $tempName[0], $tempSections[$i]['id'], $tempName[1]
+                        );
 						$tempSections[$i][$key] = $tempValue;
 					}
 					$i++;
@@ -168,7 +172,6 @@ class modules_structure_sys {
 
 			}
 			return($tempSections);
-			
 		}
 	}
 	
