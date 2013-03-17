@@ -89,7 +89,7 @@ class modules_structure_sys {
 		foreach ($request as $key=>$value) {
 			// Проверяем принадлежность ключа к таблице Sections
 			if ($key=='id' or $key=='name' or $key=='title' or $key=='parent_id' or $key=='base_class' or $key == 'pos') {
-				$key = 'sections.`'.$key.'`';
+				$key = 'sections.'.$key.'';
 				if ($value == 'null' or $value == '') {
 					$searchSect[$key] = '';
 				}else{
