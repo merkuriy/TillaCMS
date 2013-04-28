@@ -15,31 +15,6 @@ include('../core/__autoload_class.php');
 
 $CONF['defaultLanguage'] = modules_settings_sys::get('defaultLanguage');
 
-/*
- * Функционал определения города посетителя
- */
-if ($_SERVER['REDIRECT_URL']=='/') {
-    $CONF['city'] = 4;
-} else {
-    $temp = explode('/',$_SERVER['REDIRECT_URL']);
-
-    $city = sys::sql("
-		SELECT
-			id
-		FROM
-			prefix_Sections
-		WHERE
-			name = '".$temp[1]."' and
-			base_class = 10
-	",1);
-
-    if (count($city)>0) {
-        $CONF['city'] = $city[0]['id'];
-    } else {
-        $CONF['city'] = 4;
-    }
-}
-
 
 
 //POST
