@@ -57,14 +57,10 @@ if ($_POST['result'] == 'ajax' or $_GET['result'] == 'ajax') {
 ob_start();
 
 
-if (file_exists('../data/viewHandler.php')) {
-    include('../data/viewHandler.php');
-
-} else {
+if (!file_exists('../data/viewHandler.php') || (include '../data/viewHandler.php') === false) {
     modules_structure_url::recognizeUrl();
     $resultHTML = view::tpl('page');
 }
-
 
 
 view::debug_point($system['section'], 'конец - sedtion');
