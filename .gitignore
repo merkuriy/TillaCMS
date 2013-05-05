@@ -1,3 +1,13 @@
+#################
+## Tilla
+#################
+
+/config.php
+/debug/*.txt
+/data/images/
+/data/files/
+/data/wysiwyg/
+
 
 #################
 ## Eclipse
@@ -163,9 +173,3 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
-
-
-config.php
-data
-site
-sql.sql
