@@ -230,5 +230,5 @@
   </div>
 </div>
 
-<script src="/core/templates/js/tree.js"></script>
+<script src="/core/templates/js/structure-tree.js"></script>
 <script src="/core/templates/js/structure.js"></script>
