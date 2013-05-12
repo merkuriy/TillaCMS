@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>TillaCMS</title>
@@ -14,10 +14,18 @@
     <link type="text/css" href="/core/templates/js/plupload/jquery.plupload.queue/css/jquery.plupload.queue.css" rel="stylesheet" />
     <link rel="stylesheet" href="/core/templates/js/redactor/redactor.css" />
 
+    <link rel="stylesheet" href="/core/templates/tilla-ui/context-menu.css">
+
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
   </head>
   <body>
     <div class="navbar navbar-fixed-top">
@@ -74,7 +82,11 @@
     <script type="text/javascript" src="/core/templates/js/jquery.form.js"></script>
     <script type="text/javascript" src="/core/templates/js/jquery-ui-1.8.20.custom.min.js"></script>
     <script type="text/javascript" src="/core/templates/js/jquery-ui-timepicker-addon.js"></script>
-    <script type="text/javascript" src="/core/templates/js/jquery.mjs.nestedSortable.js"></script>
+
+    <script type="text/javascript" src="/core/templates/tilla-ui/vendor/jquery.contextMenu.js"></script>
+    <script type="text/javascript" src="/core/templates/tilla-ui/vendor/jquery.timers.js"></script>
+    <script type="text/javascript" src="/core/templates/tilla-ui/jquery.tilla-ui.tree.js"></script>
+
     <script type="text/javascript" src="/core/templates/js/redactor/ru.js"></script>
     <script type="text/javascript" src="/core/templates/js/redactor/fullscreen.js"></script>
     <script type="text/javascript" src="/core/templates/js/redactor/redactor.js"></script>
@@ -85,7 +97,6 @@
     <script type="text/javascript" src="/core/templates/js/plupload/jquery.plupload.queue/jquery.plupload.queue.js"></script>
     <script type="text/javascript" src="/core/templates/js/tiny_mce/jquery.tinymce.js"></script>
     <script type="text/javascript" src="/core/templates/js/bootstrap.js"></script>
-    <script type="text/javascript" src="/core/templates/js/tree.js"></script>
     <script type="text/javascript" src="/core/templates/js/model_tree.js"></script>
     <script type="text/javascript" src="/core/templates/js/tilla.js"></script>
 

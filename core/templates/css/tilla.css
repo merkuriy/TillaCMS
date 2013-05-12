@@ -27,64 +27,154 @@ legend .info{
 	font-size: 50%;
 }
 
-.tree{
+
+
+
+
+.tree {
+  overflow: hidden;
+  padding: 0;
 	margin-bottom: 10px;
 }
-	.tree ul{
-		margin: 0px;
-		padding: 0px;
-		list-style: none;
-	}
-		.tree ul li{
-			margin: 0px;
-			padding: 0px;
-			padding-left: 10px;
-		}
-			.tree ul li a{
-				margin: 0px;
-				padding: 0px;
-				padding: 3px;
-				padding-left: 5px;
-				margin-left: -10px;
-				display: block;
-			}
-			.tree ul li a.active{
-				background: #08C;
-				color: #FFF;
-			}
-				.tree ul li a.active .control{
-					display: block;
-				}
-			.tree li a .control{
-				float: right;
-				display: none;
-			}
-			.tree li a:hover{
-				text-decoration: none;
-				background-color: #eee;
-			}
-			.tree li a:hover .control{
-				display: block;
-			}
-			.tree ul li li a{
-				margin-left: -20px;
-				padding-left: 17px;
-			}
-			.tree ul li li li a{
-				margin-left: -30px;
-				padding-left: 29px;
-			}
-			.tree ul li li li li a{
-				margin-left: -40px;
-				padding-left: 41px;
-			}
-			.tree li{
-				position: relative;
-				z-index: 100;
-			}
-			.tree .control{
-				margin-right: 10px;
-			}
+.tree header {
+  padding: 3px;
+  background: #fafafa;
+  border-bottom: 1px solid #EEE;
+}
+
+a.quiTreeContainer,
+a.quiTreeContainer:hover {
+  position: relative;
+  display: block;
+  cursor: default;
+  overflow: auto;
+
+  height: 100%;
+
+  color: #08C;
+  text-decoration: none;
+}
+.quiTree {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  top: 25px;
+  overflow: auto;
+}
+.quiTreeBTN {
+  display: none;
+}
+
+.tree-dragged-clone-node {
+  position: absolute;
+  z-index: 1024;
+
+  filter: alpha(opacity=80);
+  opacity: 0.8;
+}
+
+.quiArrowTree {
+  position: absolute;
+
+  /* [class^="icon-"], [class*=" icon-"] */
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+.folder-open .quiArrowTree {
+  /* .icon-folder-open */
+  background-position: -408px -120px;
+}
+.folder .quiArrowTree {
+  /* .icon-folder-close */
+  background-position: -384px -120px;
+}
+.file .quiArrowTree {
+  /* .icon-file */
+  background-position: -24px -24px;
+}
+
+.tree ul {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+.tree ul li {
+  position: relative;
+  z-index: 100;
+  margin: 0px;
+  padding: 0px;
+  padding-left: 10px;
+}
+
+
+.tree ul li.quiLineTree {
+  margin: -1px 0 0;
+  height:	3px;
+}
+.quiLineTreehover {
+  background: #bbb;
+}
+
+.quiIconTree {
+  margin-left: 14px;
+  padding-left: .4em;
+}
+
+.tree ul li a.active .control {
+  display: block;
+}
+.tree li a .control {
+  float: right;
+  display: none;
+  margin-right: 10px;
+}
+
+.tree ul li .quiTreeNode {
+  margin: 0px;
+  padding: 0px;
+  padding: 3px;
+  padding-left: 5px;
+  margin-left: -10px;
+  display: block;
+}
+
+.tree ul li .quiTreeNode.active {
+  background: #69a;
+  color: #fff;
+}
+.tree li .quiTreeNode:hover,
+.tree li .quiTreeNode.hover {
+  /* .tree li a:hover */
+  background-color: #eee;
+}
+.tree li .quiTreeNode.active:hover,
+.tree li .quiTreeNode.active.hover {
+  /* .tree li a:hover */
+  background-color: #7ab;
+}
+
+.tree .quiTreeContainer.focus ul li .quiTreeNode.active {
+  background: #08c;
+  color: #fff;
+}
+.tree .quiTreeContainer.focus li .quiTreeNode:hover,
+.tree .quiTreeContainer.focus li .quiTreeNode.hover {
+  /* .tree li a:hover */
+  background-color: #eee;
+}
+.tree .quiTreeContainer.focus li .quiTreeNode.active:hover,
+.tree .quiTreeContainer.focus li .quiTreeNode.active.hover {
+  /* .tree li a:hover */
+  background-color: #19d;
+}
+
+
+
 .searchContainer{
 	height: 0px;
 }
