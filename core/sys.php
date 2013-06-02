@@ -3,26 +3,27 @@
 /*
  *	класс SYS с набором системных методов
  */
-
-// Начало класса
-class sys{
+class sys {
 	
-	//==========================================================================
-	// Реализация упрощенного запроса к БД
-	function sql($querry,$output_type){
+	/*
+	 * Упрощенный запрос к БД
+	 */
+	function sql ($sql, $output_type) {
 
 		global $CONF;
 		
 		$CONF['colsql']++;
 
-		if(empty($CONF["sqllink"])){
-		    $CONF["sqllink"] = mysql_select_db($CONF["db_name"],mysql_connect($CONF["db_host"],$CONF["db_login"], $CONF["db_pass"]));
+		if (empty($CONF["sqllink"])) {
+		    $CONF["sqllink"] = mysql_select_db($CONF["db_name"],
+                mysql_connect($CONF["db_host"], $CONF["db_login"], $CONF["db_pass"])
+            );
 		    
 		    mysql_query("SET NAMES utf8") or die(mysql_error());
 			//mysql_query("SET CHARACTER SET utf8") or die(mysql_error());
 		}
 		
-		$result = mysql_query( ' '.preg_replace('/prefix_/', $CONF["db_prefix"], $querry) ) 
+		$result = mysql_query( ' '.preg_replace('/prefix_/', $CONF["db_prefix"], $sql) )
 			or die("Invalid query: " . mysql_error());
 		
 			
@@ -38,10 +39,6 @@ class sys{
 		}
 
 	}
-	// Реализация упрощенного запроса к БД
-	//==========================================================================
-
-
 
 	//==========================================================================
 	// Функция предварительной загрузки
@@ -51,10 +48,6 @@ class sys{
 		}
 		return $CONF;
 	}
-	// Функция предварительной загрузки
-	//==========================================================================
-
-
 
 	function getFields($table){
 		global $CONF;
@@ -69,8 +62,6 @@ class sys{
 		$fields = mysql_list_fields($CONF["db_name"], $table);
 		return $fields;
 	}
-
-	
   
 	//========================================
 	// Функция вывода баннера
@@ -172,7 +163,6 @@ class sys{
 		}
 	}
 
-
 	function logEntry($event,$id='',$title=''){
 		$filename = '../core/errors/log.txt';
 		$somecontent = date("Y-m-d")." ".date("H:i:s").";".$_SESSION['user_login'].";".$event.";".$id.";".$title."\n";
@@ -184,5 +174,3 @@ class sys{
 	}
 	
 }
-// Конец класса
-?>

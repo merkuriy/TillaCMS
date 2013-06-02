@@ -42,19 +42,18 @@ class modules_structure_view {
      * и загружаются его основные атрибуты.
      * Дополнительно вызывается и загрузка базового класса,
      * к которому принадлежит этот раздел.
-     *
      */
     function newSection ($idSection = 1) {
 
         global $system;
 
         if (empty($system['section'][$idSection])) {
-            //если раздел еще незагрудался
+            //если раздел еще не загрудался
 
             $result = sys::sql('
             	SELECT `parent_id`, `name`, `title`, `base_class`
             	FROM `prefix_Sections`
-            	WHERE `id`="'.$idSection.'"
+            	WHERE `id`='.$idSection.'
             	LIMIT 1 ;
             ', 1);
 

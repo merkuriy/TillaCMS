@@ -205,5 +205,4 @@ class modules_structure_attr {
 
         return $result;
     }
-
 }
