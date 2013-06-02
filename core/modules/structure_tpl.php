@@ -22,7 +22,7 @@ class modules_structure_tpl {
 
             modules_structure_tpl::newTplLevel($tplType, $tplParam);
 
-            if (!($id_section >= 1) and (
+            if (!($idSection >= 1) and (
                 $system['tplLevel'][modules_structure_tpl::getTplLevelLast() - 1]['tplType'] == 'table' or
                     $system['tplLevel'][modules_structure_tpl::getTplLevelLast() - 1]['tplType'] == 'line'
             )) {
