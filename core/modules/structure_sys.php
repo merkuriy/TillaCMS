@@ -1,10 +1,10 @@
 <?
-/* 
-*	Модуль Структура (SYS)
-*/
 
-
+/*
+ * Модуль Structure - структура
+ */
 class modules_structure_sys {
+
 	//========================================
 	// Функция добавления комментария
 	function add($POST){
@@ -318,5 +318,5 @@ class modules_structure_sys {
 			}
 		}
 	}
+
 }
-?>

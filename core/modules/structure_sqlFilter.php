@@ -1,16 +1,14 @@
 <?php
 
 /**
- * Модуль структуры - работа с группой разделов
+ * Модуль Structure - структура
+ * Работа с группой разделов
  * 
  * sqlFilter использует пользовательские файлы формирования запроса
  * к базе для выбора группы разделов при выводе дочерних разделов из
  * шаблона типа TABLE
  */
 class modules_structure_sqlFilter {
-
-	
-	
 	
 	/*
 	 * Возвращает количество дочерних разделов
@@ -39,11 +37,7 @@ class modules_structure_sqlFilter {
 		}
 		
 		return $tplLevel['countChild'];
-		
 	}
-	
-	
-	
 	
 	/*
 	 * Загрузить дочерние разделы
@@ -83,9 +77,6 @@ class modules_structure_sqlFilter {
 		
 	}
 	
-	
-	
-	
 	/**
 	 * Возвращает часть запроса, используя файлы sqlFilter
 	 * 
@@ -93,7 +84,7 @@ class modules_structure_sqlFilter {
 	 * которая подходит для полной загрузки дочерних разделов
 	 * Иначе будет возвращена часть запроса для подсчета
 	 * количества дочерних разделов.
-	 * 
+	 *
 	 * @return string
 	 * @param int &$idTplLevel
 	 * @param boolean $full[optional]
@@ -113,10 +104,6 @@ class modules_structure_sqlFilter {
 			$sqlOrder	= '';
 			$sqlGroup	= '';
 			$sqlLimit	= '';
-			
-			
-			
-			
 			
 			if( isset($tplLevel['tplParam']['limitChild'][0]) and $tplLevel['tplParam']['limitChild'][0]>=0 ){
 				//если в шаблоне явно проставлено значение
@@ -141,13 +128,12 @@ class modules_structure_sqlFilter {
 				//значение по умолчанию
 				$tplLevel['startChild'] = 1;
 			}
-			
+
 			
 			if( $tplLevel['tplParam']['order'][0]=='random' ){
 				$sqlOrder = 'RAND()';
 			}
-			
-			
+
 			
 			//если уровень активного раздела, то добавляем фильтр по умолчанию
 			if( $tplLevel['level']['section']['id']==$system['tplLevel'][0]['level']['section']['id'] ){
@@ -204,9 +190,6 @@ class modules_structure_sqlFilter {
 			}
 			
 			
-			
-			
-			
 			//ищем в параметрах все sqlFilter
 			if( isset( $tplLevel['tplParam']['sqlFilter'][0]) ){
 				foreach( $tplLevel['tplParam']['sqlFilter'] as $value ){
@@ -223,14 +206,10 @@ class modules_structure_sqlFilter {
 			}
 			
 			
-			
-			
 			//sqlOrder - по умолчанию по позиции
 			if( !(strlen($sqlOrder)>3) ){
 				$sqlOrder = 'section.`pos` ';
 			}
-			
-			
 			
 			
 			//окончательная обработка переменных sql
@@ -265,10 +244,6 @@ class modules_structure_sqlFilter {
 		}
 		
 		
-		
-		
-		
-		
 		if( $full ){
 			//подготовка запроса для полной выборки раделов
 			return '
@@ -296,10 +271,5 @@ class modules_structure_sqlFilter {
 		
 		
 	}
-	
-	
   
 }
-
-
-?>

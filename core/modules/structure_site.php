@@ -1,12 +1,72 @@
 <?php
-class modules_structure_site{
+
+class modules_structure_site {
+
+	/*
+	 *
+	 */
+    function metaTitle () {
+        if (!$title = view::attr('metaTitle')) {
+            $title = view::attr('title') . ' — ' . modules_settings_sys::get('site.title');
+        }
+        return '<title>' . $title . '</title>';
+    }
+    function metaKeywords () {
+        if (!$keywords = view::attr('metaKeywords')) {
+            if (!$keywords = modules_settings_sys::get('site.keywords')) return;
+        }
+        return '<meta name="keywords" content="' . $keywords . '">';
+    }
+    function metaDescription () {
+        if (!$description = view::attr('metaDescription')) {
+            if (!$description = modules_settings_sys::get('site.description')) return;
+        }
+        return '<meta name="description" content="' . $description . '">';
+    }
+
+    function metaAll () {
+        return modules_structure_site::metaTitle()
+            . modules_structure_site::metaKeywords()
+            . modules_structure_site::metaDescription();
+    }
+
+
+    /*
+	 *    Вывод копирайт строки сайта с учетом текущего языка
+	 */
+    function copyright ($preTitle = '', $postTitle = '') {
+
+        global $CONF;
+
+        $creatYear = modules_settings_sys::get('site.startYear');
+        $curYear = date('Y');
+
+        $result = '© ';
+
+        if ($curYear == $creatYear) {
+            $result .= $creatYear;
+        } else {
+            $result .= $creatYear.' — '.$curYear;
+        }
+
+        if (empty($CONF['language']) || (
+                $CONF['defaultLanguage'] != $CONF['language']
+                && !$title = modules_settings_sys::get('site.title.' . $CONF['language']))
+        ) {
+            $title = modules_settings_sys::get('site.title');
+        }
+
+        return $result . ' ' . $preTitle . $title . $postTitle;
+    }
+
+
 	/*
 	 * Функция для проверки условия в шаблонах
 	 */
-	function condition($variable,$condition,$true='',$false=''){
-		if ($variable==$condition){
+	function condition ($variable, $condition, $true='', $false='') {
+		if ($variable == $condition) {
 			return $true;
-		}else{
+		} else {
 			return $false;
 		}
 	}
@@ -85,4 +145,3 @@ class modules_structure_site{
 			echo 'ok';
     }
 }
-?>

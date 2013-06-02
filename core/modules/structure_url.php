@@ -1,9 +1,8 @@
 <?php
 
 /*
- *
+ * Модуль Structure - структура
  */
-
 class modules_structure_url {
 
     /*
@@ -16,7 +15,6 @@ class modules_structure_url {
     function recognizeUrl ($request_uri = '') {
 
         global $system, $CONF;
-
 
         if ($request_uri >= 1) {
             //если $request_uri это id раздела

@@ -1,17 +1,15 @@
 <?php
 
 /*
- *	Модуль структуры - Навигация по частям страниц
- *	и всё что с этим связано
+ * Модуль Structure - структура
+ * Навигация по частям страниц и всё что с этим связано
  */
 class modules_structure_navigate {
-	
-	
 	
 	/*
 	 *	Навигационная панель для архива новостей по годам
 	 */	 
-	function newsArchive($tpl_name='',$activeYear=false){
+	function newsArchive ($tpl_name = '', $activeYear = false) {
 		
 		global $system;
 		
@@ -55,10 +53,7 @@ class modules_structure_navigate {
 		view::$data['buttons']=&$buttons;
 		
 		return view::tpl('navigate', $tpl_name );
-		
 	}
-	
-	
 	
 	
 	/*
@@ -104,17 +99,8 @@ class modules_structure_navigate {
 		view::$data['buttons']=&$buttons;
 		
 		return view::tpl('navigate', $tpl_name );
-		
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	
 	/*
 	 *	Стандартная навигационная панель
@@ -136,9 +122,7 @@ class modules_structure_navigate {
 				$system['tplLevel'][modules_structure_tpl::getTplLevelLast()]['startChild']+1
 			)/	$system['tplLevel'][modules_structure_tpl::getTplLevelLast()]['limitChild']
 		);
-		
-		
-		
+
 		
 		if($part_last<=1) return false;
 		
@@ -199,16 +183,7 @@ class modules_structure_navigate {
 		view::$data['buttons'] = &$buttons;
 		
 		return view::tpl('navigate', $tpl_name );
-		
-		
-		
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	/*
@@ -298,13 +273,7 @@ class modules_structure_navigate {
 		$minimacros['url'] = view::attr('_url.newparams');
 		
 		return modules_structure_tpl::parseTamplate('navigate',$tpl_name,'',$minimacros);
-		
-		
 		*/
-		
-		
-		
-		
 	}
   
 }

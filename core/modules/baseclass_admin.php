@@ -1,94 +1,87 @@
 <?php
 
 /**
- *	класс BaseClass с набором системных методов
+ * Модуль BaseClass
  */
-class modules_baseclass_admin{
+class modules_baseclass_admin {
+
 	const TITLE = 'Модели';
 	const POSITION = '2';
 
-
-	//==================================================================================================
-	// Функция определения адресата запроса
-	function onLoad($GET,$POST,$FILES){
+	/*
+	 * Роутинг по модулю
+	 */
+	function onLoad ($GET, $POST) {
 		if (!isset($GET['action'])){modules_baseclass_admin::show();}
-		if ($GET['action']=='buildTree'){modules_baseclass_admin::buildTree($GET['author']);}
-		if ($GET['action']=='addClass'){modules_baseclass_admin::addClass($GET['author']);}
-		if ($GET['action']=='addClassSCR'){modules_baseclass_admin::addClassSCR($POST);}
-		if ($GET['action']=='editClass'){modules_baseclass_admin::editClass($GET['id'],$GET['author']);}
-		if ($GET['action']=='getChildClass'){modules_baseclass_admin::getChildClass($GET['id'],$GET['author']);}
-		if ($GET['action']=='getChildAttr'){modules_baseclass_admin::getChildAttr($GET['id'],$GET['author']);}
-		if ($GET['action']=='saveClass'){modules_baseclass_admin::saveClass($GET['id'],$POST);}
-		if ($GET['action']=='addChildClass'){modules_baseclass_admin::addChildClass($GET['id'],$POST);}
-		if ($GET['action']=='addChildAttr'){modules_baseclass_admin::addChildAttr($GET['id'],$POST);}
-		if ($GET['action']=='delChildClass'){modules_baseclass_admin::delChildClass($GET['id']);}
-		if ($GET['action']=='delChildAttr'){modules_baseclass_admin::delChildAttr($GET['id']);}
-		if ($GET['action']=='deleteClass'){modules_baseclass_admin::deleteClass($GET['id'],$GET['author']);}
-		if ($GET['action']=='editComponentSettings') {modules_baseclass_admin::editComponentSettings($GET['id']);}
-		if ($GET['action']=='saveComponentSettings') {modules_baseclass_admin::saveComponentSettings($GET['component'],$GET['id'],$POST);}
-		if ($GET['action']=='createComponentSettings') {modules_baseclass_admin::createComponentSettings($GET['id'],$POST);}
-		if ($GET['action']=='delComponentSettings') {modules_baseclass_admin::delComponentSettings($GET['component'],$GET['id']);}
-		if ($GET['action']=='renameChildAttr') {modules_baseclass_admin::renameChildAttr($GET['newTitle'],$GET['id']);}
+		elseif ($GET['action']==='buildTree'){modules_baseclass_admin::buildTree($GET['author']);}
+        elseif ($GET['action']==='addClass'){modules_baseclass_admin::addClass($GET['author']);}
+        elseif ($GET['action']==='addClassSCR'){modules_baseclass_admin::addClassSCR($POST);}
+        elseif ($GET['action']==='editClass'){modules_baseclass_admin::editClass($GET['id'],$GET['author']);}
+        elseif ($GET['action']==='getChildClass'){modules_baseclass_admin::getChildClass($GET['id'],$GET['author']);}
+        elseif ($GET['action']==='getChildAttr'){modules_baseclass_admin::getChildAttr($GET['id'],$GET['author']);}
+        elseif ($GET['action']==='saveClass'){modules_baseclass_admin::saveClass($GET['id'],$POST);}
+        elseif ($GET['action']==='addChildClass'){modules_baseclass_admin::addChildClass($GET['id'],$POST);}
+        elseif ($GET['action']==='addChildAttr'){modules_baseclass_admin::addChildAttr($GET['id'],$POST);}
+        elseif ($GET['action']==='delChildClass'){modules_baseclass_admin::delChildClass($GET['id']);}
+        elseif ($GET['action']==='delChildAttr'){modules_baseclass_admin::delChildAttr($GET['id']);}
+        elseif ($GET['action']==='deleteClass'){modules_baseclass_admin::deleteClass($GET['id'],$GET['author']);}
+        elseif ($GET['action']==='editComponentSettings') {modules_baseclass_admin::editComponentSettings($GET['id']);}
+        elseif ($GET['action']==='saveComponentSettings') {modules_baseclass_admin::saveComponentSettings($GET['component'],$GET['id'],$POST);}
+        elseif ($GET['action']==='createComponentSettings') {modules_baseclass_admin::createComponentSettings($GET['id'],$POST);}
+        elseif ($GET['action']==='delComponentSettings') {modules_baseclass_admin::delComponentSettings($GET['component'],$GET['id']);}
+        elseif ($GET['action']==='renameChildAttr') {modules_baseclass_admin::renameChildAttr($GET['newTitle'],$GET['id']);}
 	}
-	// Функция определения адресата запроса
-	//==================================================================================================
-	
-	
-	
-	
-	//==================================================================================================
-	// Функция вывода главной страницы Базовых Классов
-	function show(){
-		$sql = sys::sql("SELECT `id` FROM `prefix_ClassSections` WHERE `id`='1';",0);					// Проверяем наличие в БД Корня
 
-		if (mysql_num_rows($sql)==0){
-			$sql = sys::sql("INSERT INTO `prefix_ClassSections` VALUES ('1','0','root','Корень','type','');",0);
+    /*
+     * Вывод главной страницы модуля
+     */
+	function show () {
+        // Проверяем наличие в БД Корня
+		$sql = sys::sql('SELECT `id` FROM `prefix_ClassSections` WHERE `id`=1;', 0);
+
+		if (mysql_num_rows($sql) == 0) {
+			sys::sql("INSERT INTO `prefix_ClassSections` VALUES ('1','0','root','Корень','type','');", 0);
 		}
 		
-		$SEND['tree'] = modules_baseclass_admin::buildTree();											// Формируем дерево
+		$SEND['tree'] = modules_baseclass_admin::buildTree();		// Формируем дерево
 		$SEND['path'] = 'Базовые Классы';
-		$SEND['content'] = admin::draw('baseclass/page',$SEND);											// Формируем контент
-		$SEND['js'] = 'baseclass/js.js';																// Указываем файл JavaScript'а
-		$SEND['title'] = 'Базовые Классы';																// Указываем заголовое страницы
+		$SEND['content'] = admin::draw('baseclass/page',$SEND);		// Формируем контент
+		$SEND['js'] = 'baseclass/js.js';							// Указываем файл JavaScript'а
+		$SEND['title'] = 'Базовые Классы';							// Указываем заголовое страницы
 		
-		echo admin::draw('page_index',$SEND);															// Выводим админку
+		echo admin::draw('page_index',$SEND);						// Выводим админку
 	}
-	// Функция вывода главной страницы Базовых Классов
-	//==================================================================================================
 
+	/*
+	 * Построение дерева базовых классов
+	 */
+	function buildTree ($author = '') {
 
+		$sql = sys::sql('
+            SELECT
+                `id`,
+                `title`
+            FROM
+                `prefix_ClassSections`
+            WHERE
+                `type` = "type"
+            ORDER BY `id`
+		;', 0);
 
-
-	//==================================================================================================
-	// Функция построения дерева базовых классов
-	function buildTree($author = ''){
-
-		$sql = sys::sql("SELECT
-							`id`,
-							`title`
-						FROM
-							`prefix_ClassSections`
-						WHERE
-							`type` = 'type'
-						ORDER BY `id`
-		;",0);
-
-		while ($row = mysql_fetch_array($sql)){
-			$SEND['childNode'] .= admin::draw('baseclass/tree.element',$row); 
+        $SEND = '';
+		while ($row = mysql_fetch_array($sql)) {
+			$SEND['childNode'] .= admin::draw('baseclass/tree.element', $row);
 		}
 
 		$SEND['title'] = 'Базовые классы';
 		$SEND['id'] = '0';
 
-		if ($author=='admin'){
+		if ($author=='admin') {
 			echo admin::draw('baseclass/tree',$SEND);
 		}else{
 			return admin::draw('baseclass/tree',$SEND);
 		}
-
 	}
-	// Функция построения дерева базовых классов
-	//==================================================================================================
 
 
 
