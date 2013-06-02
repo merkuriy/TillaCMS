@@ -69,11 +69,11 @@ var $loadPage = function(href) {
   $('a[href="'+href+'"]').parent('li').addClass('active');
 }
 
-var $alert = function(message, type) {
+function $alert(message, type) {
   if (type != '') {
-    type = 'alert-'+type;
+    type = 'alert-' + type;
   }
-  $('<div class="alert '+type+'" style="display: none;">'+message+'</div>')
+  $('<div class="alert ' + type + '" style="display: none;">' + message + '</div>')
     .appendTo('#alert-block')
     .fadeIn('slow', function() {
       var self = this;
@@ -86,14 +86,13 @@ var $alert = function(message, type) {
     });
 }
 
-var $createContent = function(id) {
+function $createContent(parentId) {
   $.ajax({
-    url:      "/api.post/structure_panel.get_child_model?id=" + id,
+    url:      '/api.post/structure_panel.get_child_model?id=' + parentId,
     dataType: 'json',
     success:  function(data) {
-      $('#content-id').val(id);
-      $type = $('#content-type');
-      $type.html('');
+      $('#content-id').val(parentId);
+      var $type = $('#content-type').empty();
       $.each(data, function() {
         $type.append('<option value="'+this.name+'">'+this.title+'</option>');
       });
@@ -102,25 +101,29 @@ var $createContent = function(id) {
   });
 }
 
-var $confirm = function(header, message, trueText, falseText, trueFunction, falseFunction) {
-  $('#confirm-modal').find('h3').html(header);
-  $('#confirm-modal').find('p').html(message);
+function $confirm(header, message, trueText, falseText, trueFunction, falseFunction) {
+  var $confirmModal = $('#confirm-modal');
+  $confirmModal.find('h3').html(header);
+  $confirmModal.find('p').html(message);
   $('#confirm-true-btn')
     .html(trueText)
-    .die('click')
-    .live('click', trueFunction)
-    .live('click', function() {
-      $('#confirm-modal').modal('hide');
+    .off('click')
+    .on('click', function() {
+      trueFunction();
+      $confirmModal.off('hidden.confirmFalseFunction').modal('hide');
     });
   $('#confirm-false-btn')
     .html(falseText)
-    .die('click')
-    .live('click', falseFunction)
-    .live('click', function() {
-      $('#confirm-modal').modal('hide');
+    .off('click')
+    .on('click', function() {
+      falseFunction();
+      $confirmModal.off('hidden.confirmFalseFunction').modal('hide');
     });
 
-  $('#confirm-modal').modal();
+  $confirmModal
+    .off('hidden.confirmFalseFunction')
+    .on( 'hidden.confirmFalseFunction', falseFunction)
+    .modal();
 }
 
 
@@ -128,18 +131,18 @@ var $confirm = function(header, message, trueText, falseText, trueFunction, fals
  * Loading settings
  */
 var $load_settings = function() {
-    $.ajax({
-        url: "/api.post/structure_panel.get_settings",
-        dataType: 'json',
-        success: function(data) {
+  $.ajax({
+    url: "/api.post/structure_panel.get_settings",
+    dataType: 'json',
+    success: function(data) {
 
-            $.template('td',
-                '<tr data-id="${id}"><td>${name}</td><td><span>${value}</span>' +
-                    '<div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>'
-            );
-            $.tmpl("td", data).appendTo("#settings-rows");
-        }
-    });
+      $.template('td',
+        '<tr data-id="${id}"><td>${name}</td><td><span>${value}</span>' +
+          '<div class="float-right"><i class="icon-edit"></i><i class="icon-trash"></i></div></td></tr>'
+      );
+      $.tmpl("td", data).appendTo("#settings-rows");
+    }
+  });
 }
 
 
@@ -191,7 +194,7 @@ $().ready(function() {
       success : function() {
         $alert('Сохранение прошло успешно', 'success');
         var $id = $('#node-content input[name="id"]').val();
-        $('[data-id="' + $id + '"] span').text($('#title').val());
+        $('[data-id="' + id + '"] span').text($('#title').val());
       }
     });
     return false;
@@ -217,59 +220,40 @@ $().ready(function() {
   });
 
   $('#cancel-content-btn').live('click', function() {
-    $modal = $('#content-create-modal');
+    $('#content-create-modal').modal('hide');
+  });
+
+  $(document.body).on('hidden', '#content-create-modal', function(e) {
+    var $modal = $(e.target);
     $modal.find('input').val('');
-    $modal.find('select').html('');
-    $modal.modal('hide');
+    $modal.find('select').empty();
   });
 
   $('#create-content-btn').live('click', function() {
+    var
+      parentId = $('#content-id').val(),
+      title = $('#content-name').val();
+
     $.ajax({
-      url:      "/api.post/structure_panel.add_new_element",
-      data:     {
-        'parent_id'  : $('#content-id').val(),
-        'name'       : $('#content-uri').val(),
-        'title'      : $('#content-name').val(),
-        'base_class' : $('#content-type').val()
+      url:  '/api.post/structure_panel.add_new_element',
+      data: {
+        parent_id  : parentId,
+        name       : $('#content-uri').val(),
+        title      : title,
+        base_class : $('#content-type').val()
       },
       dataType: 'json',
       success:  function(data) {
-        $id = $('#content-id').val();
 
-        if ($id == 0) {
-          $parent = $('#tree ul');
-        } else {
-          if ($('[data-id="' + $id + '"] .title .icon-folder-close').size() == 1) {
-            if ($('[data-parent="' + $id + '"]').size() == 1) {
-              $('[data-id="' + $id + '"] .title i').click();
-            } else {
-              $.tree({'action' : 'load', 'id' : $id});
-              $('[data-id="' + $id + '"] .title i').removeClass('icon-folder-close').addClass('icon-folder-open');
-            }
-            $parent = $('[data-parent="' + $id + '"]');
-          } else if ($('[data-id="' + $id + '"] .title .icon-folder-open').size() == 1) {
-            $parent = $('[data-parent="' + $id + '"]');
-          } else {
-            $('[data-id="' + $id + '"]').parent('li').append('<ul data-parent="' + $id + '"></ul>');
-            $('[data-id="' + $id + '"] .title i').removeClass('icon-file').addClass('icon-folder-open');
-            $parent = $('[data-parent="' + $id + '"]');
-          }
-        }
-
-        $parent.append(
-          '<li><a href="#" data-id="' + data.id + '" data-no-ajax="true">' +
-          '<div class="title"><i class="icon-file"></i> ' +
-          $('#content-name').val() +
-          '</div><div class="control"><i class="icon-plus"></i>' +
-          '<i class="icon-edit"></i><i class="icon-trash"></i></div></a></li>'
-        );
-
-        $('#cancel-content-btn').click();
+        $('#content-create-modal').modal('hide');
         $alert('Новый элемент успешно создан!', 'success');
 
-        setTimeout(function() {
-          $('[data-id="'+data.id+'"]').find('.icon-edit').click();
-        }, 100);
+        if (!(parentId && parentId > 1)) parentId = 'root';
+        StructureTree.addNode(parentId, data.id, title);
+        Structure.showSection(data.id);
+      },
+      error: function() {
+        // TODO: нужно обрабатывать ошибки
       }
     });
 
@@ -308,8 +292,8 @@ $().ready(function() {
       dataType: 'json',
       success: function(data) {
         var $id    = $('#model-add-child').val(),
-            $title = $('#model-add-child option[value="'+$id+'"]').text(),
-            $name  = $('#model-add-child option[value="'+$id+'"]').data('name');
+            $title = $('#model-add-child option[value="'+id+'"]').text(),
+            $name  = $('#model-add-child option[value="'+id+'"]').data('name');
 
         $('#model-childs').append(
           '<tr data-id="'+data+'"><td>'+$title+'</td><td>'+$name+'</td><td class="width14"><i class="icon-trash control"></i></td></tr>'
@@ -422,7 +406,7 @@ $().ready(function() {
     $.ajax({
       type: "GET",
       dataType: 'json',
-      url: "/api.post/structure_panel.get_component_settings?id="+$id+"&component="+$component,
+      url: "/api.post/structure_panel.get_component_settings?id="+id+"&component="+$component,
       success: function(msg){
         if ($component == 'THidden') {
           $('#model-thidden-default').val(msg.value);
@@ -442,7 +426,7 @@ $().ready(function() {
 
         if ($component == 'TImage') {
           $('.timage-rule').remove();
-          $('#TImageSettings').data('id', $id);
+          $('#TImageSettings').data('id', id);
           var resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
           $.each(msg.rule, function() {
             $('#TImageSettings .control-row').before(
@@ -459,7 +443,7 @@ $().ready(function() {
       }
     });
 
-    $('#' + $component + 'Settings').modal('show').data('id', $id);
+    $('#' + $component + 'Settings').modal('show').data('id', id);
   })
 
 
@@ -781,7 +765,7 @@ $().ready(function() {
     $.ajax({
       type: "POST",
       data: {
-        id    : $id
+        id    : id
       },
       url: "/api.post/structure_panel.remove_select_settings",
       success: function(msg) {

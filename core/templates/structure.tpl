@@ -1,8 +1,6 @@
 <div class="row">
   <div class="span3 tree-container">
-    <div class="well tree" id="tree" style="padding: 8px 0; height: 500px; overflow: hidden; overflow-y: scroll;">
-    </div>
-    <script>$.tree();</script>
+    <div class="well tree" id="tree"></div>
     <div class="searchContainer">
       <div class="search">
         <form class="form-horizontal">
@@ -232,11 +230,5 @@
   </div>
 </div>
 
-<script>
-  $('#tree').css('height', $(window).height()-130);
-  $('#content-zone').css('height', $(window).height()-168);
-  $(window).bind('resize', function() {
-    $('#tree').css('height', $(window).height()-130);
-    $('#content-zone').css('height', $(window).height()-168);
-  });
-</script>
+<script src="/core/templates/js/structure-tree.js"></script>
+<script src="/core/templates/js/structure.js"></script>
