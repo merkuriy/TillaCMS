@@ -47,25 +47,16 @@ class modules_structure_url {
             if ($paths[0] == '/') {
                 //грузим домашнюю страницу
 
-                $paths = modules_settings_sys::get('homePage');
-                if ($paths >= 1) {
-                    //если в $paths находится id раздела домашней страницы
-                    $paths = view::attr('_url','id='.$paths);
-                }
+                if ($system['homePage'] > 0) {
+                    modules_structure_view::newLevel($system['homePage']);
+                    // TODO: нужно проверять существование такой домашней страницы и выводить ошибку (возможно при инициализации)
 
-                if (strlen($paths) <= 1) {
-                    //если в $paths указано неверное значение
-                    //ищем первую подходящую страницу
-                    $result = sys::sql('
-                        SELECT `name`
-                        FROM `prefix_Sections`
-                        WHERE `parent_id`="1"
-                        LIMIT 1
-                        ;
-                    ', 1);
-
-                    $paths = $result[0]['name'];
+                } else {
+                    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+                    header('Status: 404 Not Found');
+                    exit;
                 }
+                return true;
 
             } else {
                 //страница по указоному пути
@@ -73,14 +64,26 @@ class modules_structure_url {
             }
         }
 
-        $pathsArr = explode('/', $paths);
-
         view::debug_point($paths, 'URL= '.$request_uri, 0);
-        $pathsArr = modules_structure_url::buildingStructure($pathsArr);
 
-        if (!$paths or ('/' . implode('/', $pathsArr)) != $paths) {
-            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-            header("Status: 404 Not Found");
+        if (empty($paths)) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            header('Status: 404 Not Found');
+            exit;
+        }
+
+        $pathsArr = explode('/', substr($paths, 1));
+        foreach ($pathsArr as $key => $value) if ($value == '') {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            header('Status: 404 Not Found');
+            exit;
+
+            unset($pathsArr[$key]);
+        }
+
+        if (modules_structure_url::buildingStructure($pathsArr) === false) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            header('Status: 404 Not Found');
             exit;
         }
 
@@ -106,55 +109,95 @@ class modules_structure_url {
     function buildingStructure ($paths) {
 
         global $system;
+        $system__rootSections =& $system['rootSections'];
 
-        $temp = '';
-        foreach ($paths as $value) {
-
-            if ($value != '') {
-                $temp .= ' or `name`="'.$value.'"';
-                $pathsThis[] = $value;
-            }
+        //ищем первый уровень
+        if (($sectionName = array_shift($paths)) === NULL) {
+            //не было найдено раздела первого уровня
+            //<<error
+            echo 'eh1';
+            return false;
         }
-        unset($paths);
 
+        $rootSectionsStr = implode(',', array_keys($system__rootSections));
+        $result = sys::sql('
+            SELECT `id`, `parent_id`, `title`, `base_class`
+            FROM `prefix_Sections`
+            WHERE
+              `name` = "'.$sectionName.'"
+              AND `id` NOT IN ('.$rootSectionsStr.') AND `parent_id` IN ('.$rootSectionsStr.')
+            LIMIT 1 ;
+        ', 1);
+
+        if (isset($result[0])) {
+            //сохраняются данные атрибутов в системном массиве
+            $system['section'][$result[0]['id']] = $result[0];
+            $system['section'][$result[0]['id']]['name'] &= $sectionName;
+
+            modules_structure_view::newLevel($result[0]['id']);
+
+        } else {
+            //не было найдено раздела первого уровня
+
+            if (count($paths) > 0) {
+                $result = sys::sql('
+                    SELECT 1
+                    FROM `prefix_Sections`
+                    WHERE
+                      `name` = "'.$sectionName.'" AND `id` IN ('.$rootSectionsStr.')
+                    LIMIT 1 ;
+                ', 1);
+                if (isset($result[0])) {
+                    /* если существует корневой раздел совпадающий с разделом первого уровня
+                     * такое можно исправить автоматически редиректом HTTP 301
+                     */
+                    // TODO: убрать прямую работу с $_SERVER['HTTP_HOST']
+                    header ($_SERVER['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
+                    header ('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . implode('/', $paths));
+                    die;
+                }
+            }
+
+            //<<error
+            echo 'eh2';
+            return false;
+        }
+
+        if (count($paths) === 0) {
+            // все разделы найдены
+            return true;
+        }
+
+        //ищем все остальные разделы
         $result = sys::sql('
 			SELECT `id`, `parent_id`, `name`
 			FROM `prefix_Sections`
-			WHERE 1=0 '.$temp.'
+			WHERE
+			  `name` IN ("' . implode('","', $paths) . '")
+			  AND `id` NOT IN ('.$rootSectionsStr.') AND `parent_id` NOT IN ('.$rootSectionsStr.')
 			;
 		',1);
 
-        //ищем первый уровень
-        $temp_a = true;
-        foreach ($result as $val) {
-            if ($val['parent_id'] <= 1 and $val['name'] == $pathsThis[0]) {
-
-                modules_structure_view::newLevel($val['id']);
-                $temp_a = false;
-                break;
-            }
-        }
-
-        if ($temp_a) {
-            //не было найдено раздела первого уровня
+        if (count($result) === 0) {
+            //не было найдено остальных разделов
             //<<error
             return false;
         }
 
-        //ищем все остальные разделы
-        for ($i = 1; $i < count($pathsThis); $i++) {
+        foreach ($paths as $sectionName) {
 
             $temp_a = count($result) - 1;
 
-            while ($temp_a >= 0) {
-                if ($result[$temp_a]['parent_id'] == $system['level'][modules_structure_view::getLevelLast()]['section']['id']
-                    and $result[$temp_a]['name'] == $pathsThis[$i]
-                ){
-                    modules_structure_view::newLevel( $result[$temp_a]['id'] );
-                    $temp_a = -1;
+            do {
+                if ($result[$temp_a]['parent_id'] == $system['level'][modules_structure_view::getLevelLast()]['section']['id']) {
+                    if ($result[$temp_a]['name'] == $sectionName) {
+                        modules_structure_view::newLevel( $result[$temp_a]['id'] );
+                        unset($result[$temp_a]);
+                        break;
+                    }
+                    unset($result[$temp_a]);
                 }
-                $temp_a--;
-            }
+            } while (--$temp_a >= 0);
 
             if ($temp_a == -1) {
                 //не было найдено очередного раздела
@@ -163,7 +206,7 @@ class modules_structure_url {
             }
         }
 
-        return $pathsThis;
+        return true;
     }
 
 
@@ -248,3 +291,33 @@ class modules_structure_url {
     }
 
 }
+
+
+// init
+global $system;
+
+// TODO: возможно лучше будет убать 1 из корневого раздела по умолчанию
+$system['rootSections'] = array(0 => true, 1 => true);
+$rootSections = modules_settings_sys::get('rootSections');
+if ($rootSections) {
+    $rootSections = explode(',', $rootSections);
+    foreach ($rootSections as $rootSectionId) {
+      if ($rootSectionId > 1) $system['rootSections'][$rootSectionId] = true;
+    }
+}
+
+if (!(($system['homePage'] = modules_settings_sys::get('homePage') - 0) >= 1)) {
+
+    /* если указано неверное значение домашней страницы
+     * ищем первую подходящую страницу (с приоритетом для корневых разделов)
+     */
+    $result = sys::sql('
+        SELECT `id`
+        FROM `prefix_Sections`
+        ORDER BY `id` NOT IN ('.$rootSectionsStr.'), `pos`
+        LIMIT 1
+    ;', 1);
+
+    $system['homePage'] = isset($result[0]) ? $result[0]['id'] : 0;
+}
+$system['rootSections'][$system['homePage']] = true;

@@ -176,9 +176,9 @@ class modules_structure_attr {
             } else {
                 $result = '';
                 do {
-                    $result = '/'.view::attr('name', 'id='.$idSection).$result;
-                    $idSection = & $system['section'][$idSection]['parent_id'];
-                } while ($idSection >= 2);
+                    $result = '/' . view::attr('name', 'id='.$idSection) . $result;
+                    $idSection =& $system['section'][$idSection]['parent_id'];
+                } while (!isset($system['rootSections'][$idSection]));
             }
 
         } elseif ($attrName == '_countPart') {
