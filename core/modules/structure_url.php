@@ -296,7 +296,7 @@ class modules_structure_url {
 // init
 global $system;
 
-// TODO: возможно лучше будет убать 1 из корневого раздела по умолчанию
+// TODO: возможно лучше будет убрать id=1 из корневого раздела по умолчанию
 $system['rootSections'] = array(0 => true, 1 => true);
 $rootSections = modules_settings_sys::get('rootSections');
 if ($rootSections) {
