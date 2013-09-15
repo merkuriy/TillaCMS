@@ -11,7 +11,7 @@ class modules_structure_view {
      * Если запрошеный Базовый Класс еще не создавался,
      * загружаются его параметры
      */
-    function newBaseClass($idBaseClass) {
+    static function newBaseClass($idBaseClass) {
 
 		global $system;
 		
@@ -26,7 +26,6 @@ class modules_structure_view {
         			and `type`="attr"
         		;
         	', 1);
-			//print_r($result);
 			
             foreach ($result as $value) {
                 $system['classSection'][$idBaseClass][$value['attr']] = $value['value'];
@@ -43,7 +42,7 @@ class modules_structure_view {
      * Дополнительно вызывается и загрузка базового класса,
      * к которому принадлежит этот раздел.
      */
-    function newSection ($idSection = 1) {
+    static function newSection ($idSection = 1) {
 
         global $system;
 
@@ -74,7 +73,7 @@ class modules_structure_view {
      * Добавляется новый уровень разделов, для определённого раздела.
      * Дополнительно вызывается и загрузка этого раздела.
      */
-    function newLevel ($idSection) {
+    static function newLevel ($idSection) {
 
         global $system;
 		
@@ -92,7 +91,7 @@ class modules_structure_view {
     /*
      * Удаление последнего уровеня разделов
      */
-    function removeLevel () {
+    static function removeLevel () {
 
         global $system;
 		
@@ -106,9 +105,10 @@ class modules_structure_view {
      * Возвращает номер последнего уровeня разделов,
      * т.е. тот который в данный момент используется (активный)
      */
-    function getLevelLast () {
+    static function getLevelLast () {
         global $system;
         return count($system['level'])-1;
     }
 
 }
+
