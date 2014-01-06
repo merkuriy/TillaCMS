@@ -8,36 +8,34 @@ class sys {
 	/*
 	 * Упрощенный запрос к БД
 	 */
-	function sql ($sql, $output_type) {
+	function sql ($sql, $output_type = false) {
 
 		global $CONF;
 		
 		$CONF['colsql']++;
 
-		if (empty($CONF["sqllink"])) {
-		    $CONF["sqllink"] = mysql_select_db($CONF["db_name"],
-                mysql_connect($CONF["db_host"], $CONF["db_login"], $CONF["db_pass"])
+		if (empty($CONF['sqllink'])) {
+		    $CONF['sqllink'] = mysql_select_db($CONF['db_name'],
+                mysql_connect($CONF['db_host'], $CONF['db_login'], $CONF['db_pass'])
             );
-		    
-		    mysql_query("SET NAMES utf8") or die(mysql_error());
-			//mysql_query("SET CHARACTER SET utf8") or die(mysql_error());
+
+            mysql_set_charset('utf8') || die('err:db msc02'); // TODO: error
 		}
 		
-		$result = mysql_query( ' '.preg_replace('/prefix_/', $CONF["db_prefix"], $sql) )
+		$result = mysql_query(str_replace('prefix_', $CONF['db_prefix'], $sql))
 			or die("Invalid query: " . mysql_error());
 		
 			
-		if($output_type==''){
-			return $result;
-		}else{
-			$output = array();
-			while( $row = mysql_fetch_array( $result, MYSQL_ASSOC ) ){
-		     	$output[] = $row;
-			}
-			
-			return $output;
+		if ($output_type) {
+            $output = array();
+            while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+                $output[] = $row;
+            }
+
+            return $output;
 		}
 
+        return $result;
 	}
 
 	//==========================================================================
