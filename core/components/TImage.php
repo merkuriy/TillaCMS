@@ -301,20 +301,18 @@ class components_TImage {
 	}
 
 
-	//=====================================
-	//Функция вывода данных
-	function view($name,$parentId,$param=''){
+	/*
+	 * Вывод данных
+	 */
+	function view ($name, $parentId, $param='') {
 		
 		global $system;
 		
 		//components_TImage::createTable();
-		
 		list($param, $dop) = explode('-', $param);
 		
-		
-		
 		//Если раздела и базового класса нет в кеше получаем их
-		if (empty($system['section'][$parentId]) ){
+		if (empty($system['section'][$parentId])){
 			modules_structure_view::newSection();
 		}
 		
@@ -323,8 +321,7 @@ class components_TImage {
 				$system['classSection'][
 					$system['section'][$parentId]['base_class']
 				]['settings.'.$name]
-			)
-		){
+		)) {
 			$settings = sys::sql("
 				SELECT
 					settings.`psevdo` psevdo,
@@ -338,7 +335,7 @@ class components_TImage {
 					baseClass.`id` = settings.`parent_id` 
 			;", 1);
 			
-			foreach( $settings as $val ){
+			foreach ($settings as $val) {
 				$system['classSection'][
 					$system['section'][$parentId]['base_class']
 				]['settings.'.$name][
@@ -349,7 +346,7 @@ class components_TImage {
 		
 		
 		//если псевдо параметр имени не задан, получаем первый в списке псевдо имён
-		if ($param==''){
+		if ($param == ''){
 			reset(
 				$system['classSection'][
 					$system['section'][$parentId]['base_class']
@@ -366,40 +363,30 @@ class components_TImage {
 				$system['section'][$parentId]['base_class']
 			]['settings.'.$name][$param]['path'];
 		
-		
-		
 		//Получаем id изображения
-		$data_child_element = mysql_result(
-			sys::sql("
-				SELECT `id`
-				FROM `prefix_TImage`
-				WHERE `name`='$name' AND `parent_id`='$parentId'
-			;",0) ,0 
-		);
+        $fileId = sys::sql("
+            SELECT `id`
+            FROM `prefix_TImage`
+            WHERE `name`='$name' AND `parent_id`='$parentId'
+            LIMIT 1
+        ;");
+        if ($fileId === false || mysql_num_rows($fileId) !== 1) return false;
+        $fileId = mysql_result($fileId, 0);
 		
-		
-	    $file='../data/images/'.$data_child_element.$param.'.jpg';
-		
-		if (!file_exists($file)){
-		    $file='../data/images/'.$data_child_element.$param.'.png';
-            if (!file_exists($file))
-                if ($path_none)
-                    return '/data/images/'.$path_none;
-                else
-                    return false;
+	    $file = '../data/images/'.$fileId.$param.'.jpg';
+		if (!file_exists($file)) {
+		    $file = '../data/images/'.$fileId.$param.'.png';
+            if (!file_exists($file)) return $path_none ? '/data/images/' . $path_none : false;
 		}
-		
 		
 		switch ($dop) {
 			case 'filesize':
-				
-				return round( filesize($file) / 1048576, 2);
+				return round(filesize($file) / 1048576, 2);
 				
 			case 'width':
-				
 				$type = substr($file, -3);
 				
-				switch ( $type ){
+				switch ($type) {
 					case 'jpg':
 						return imagesx( ImageCreateFromJpeg($file));
 					case 'gif':
@@ -411,7 +398,6 @@ class components_TImage {
 				return false;
 				
 			case 'height':
-				
 				$type = substr($file, -3);
 				
 				switch ( $type ){
@@ -425,7 +411,6 @@ class components_TImage {
 				
 				return false;
 		}
-		
 		
 		return substr($file, 2);
 	}
