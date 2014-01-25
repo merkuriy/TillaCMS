@@ -12,7 +12,7 @@ class modules_structure_url {
      *  откроется домашняя страница, или, если таковой не задано в настройках,
      *  будет взят URL первого подраздела из раздела с id=1 (Главное меню)
      */
-    function recognizeUrl ($request_uri = '') {
+    static function recognizeUrl ($request_uri = '') {
 
         global $system, $CONF;
 
@@ -21,9 +21,9 @@ class modules_structure_url {
             $paths = view::attr( '_url', 'id='.$request_uri );
 
         } else {
-            //если $request_uri это uri путь
+            // если $request_uri это uri путь
 
-            //ищем REQUEST_URI, если неуказан $request_uri
+            // если $request_uri не указан, то возьмём найдём его из REQUEST_URI,
             if ($request_uri == '') {
                 $request_uri = $_SERVER['REQUEST_URI'];
             }
@@ -34,11 +34,12 @@ class modules_structure_url {
 
             view::debug_point($paths, 'parts===');
 
+
             foreach ($paths as $key => $value) {
                 if ($key > 0) {
                     $param_page = explode('-',$value);
                     if (count($param_page) == 2) {
-                        $system['urlParam'][$param_page[0]]=$param_page[1];
+                        $system['urlParam'][$param_page[0]] = $param_page[1];
                     }
                 }
             }
@@ -106,7 +107,7 @@ class modules_structure_url {
      *  Разбирает масив имён дерева страниц $paths
      *  и строит массив $system['structure']
      */
-    function buildingStructure ($paths) {
+    static function buildingStructure ($paths) {
 
         global $system;
         $system__rootSections =& $system['rootSections'];
@@ -134,7 +135,8 @@ class modules_structure_url {
             $system['section'][$result[0]['id']] = $result[0];
             $system['section'][$result[0]['id']]['name'] &= $sectionName;
 
-            modules_structure_view::newLevel($result[0]['id']);
+            modules_structure_view::newBaseClass( $result[0]['base_class'] );
+            modules_structure_view::newLevel(     $result[0]['id'] );
 
         } else {
             //не было найдено раздела первого уровня
@@ -185,13 +187,13 @@ class modules_structure_url {
         }
 
         foreach ($paths as $sectionName) {
-
             $temp_a = count($result) - 1;
 
             do {
                 if ($result[$temp_a]['parent_id'] == $system['level'][modules_structure_view::getLevelLast()]['section']['id']) {
                     if ($result[$temp_a]['name'] == $sectionName) {
-                        modules_structure_view::newLevel( $result[$temp_a]['id'] );
+                        modules_structure_view::newBaseClass( $result[$temp_a]['base_class'] );
+                        modules_structure_view::newLevel(     $result[$temp_a]['id'] );
                         unset($result[$temp_a]);
                         break;
                     }
@@ -214,7 +216,7 @@ class modules_structure_url {
      *  Производит изменения в массиве $system['structure']
      *  в с учетом атрибутов __abstractParent у разделов в масиве
      */
-    function absctractParent() {
+    static function absctractParent() {
 
         global $system;
 
