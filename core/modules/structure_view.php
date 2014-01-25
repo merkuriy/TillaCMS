@@ -16,7 +16,7 @@ class modules_structure_view {
 		global $system;
 		
         if (empty($system['classSection'][$idBaseClass])) {
-            //если небыл загружен ClassSection, загружаем
+            // Если небыл загружен ClassSection, загружаем
 			
             $result = sys::sql('
         		SELECT CONCAT( `type`, ".", `name` ) attr, `value`
@@ -47,7 +47,7 @@ class modules_structure_view {
         global $system;
 
         if (empty($system['section'][$idSection])) {
-            //если раздел еще не загрудался
+            // Если раздел еще не загружался
 
             $result = sys::sql('
             	SELECT `parent_id`, `name`, `title`, `base_class`
@@ -56,11 +56,11 @@ class modules_structure_view {
             	LIMIT 1 ;
             ', 1);
 
-            //сохраняются данные атрибутов в системном массиве
+            // Сохраняются данные атрибутов в системном массиве
             $system['section'][$idSection] = $result[0];
             $system['section'][$idSection]['id'] = $idSection;
 
-            //работа с базовым классом
+            // Загрузка базового класса
             modules_structure_view::newBaseClass($system['section'][$idSection]['base_class']);
         }
 
@@ -77,13 +77,12 @@ class modules_structure_view {
 
         global $system;
 		
-		//вычисление номера для нового уровня
+		// Вычисление номера для нового уровня
 		$number = count($system['level']);
 		
-		//добавление нового уровеня
+		// Добавление нового уровеня
         $system['level'][$number]['number'] = $number;
-		$system['level'][$number]['section'] = 
-			&$system['section'][modules_structure_view::newSection($idSection)];
+		$system['level'][$number]['section'] =& $system['section'][modules_structure_view::newSection($idSection)];
 		
         return $number;
     }
@@ -94,7 +93,6 @@ class modules_structure_view {
     static function removeLevel () {
 
         global $system;
-		
         //поиск и удаление уровня разделов
         unset ($system['level'][modules_structure_view::getLevelLast()]);
     }
