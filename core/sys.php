@@ -4,6 +4,8 @@
  *	класс SYS с набором системных методов
  */
 class sys {
+
+    static $db = false;
 	
 	/*
 	 * Упрощенный запрос к БД
@@ -14,29 +16,28 @@ class sys {
 		
 		$CONF['colsql']++;
 
-		if (empty($CONF['sqllink'])) {
-		    $CONF['sqllink'] = mysql_select_db($CONF['db_name'],
-                mysql_connect($CONF['db_host'], $CONF['db_login'], $CONF['db_pass'])
-            );
-
-            mysql_set_charset('utf8') || die('err:db msc02'); // TODO: error
-		}
+		if (sys::$db == false) sys::db();
 		
-		$result = mysql_query(str_replace('prefix_', $CONF['db_prefix'], $sql))
-			or die("Invalid query: " . mysql_error());
-		
-			
-		if ($output_type) {
-            $output = array();
+		if (($result = mysql_query(str_replace('prefix_', $CONF['db_prefix'], $sql))) && $output_type) {
+            $rows = array();
             while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-                $output[] = $row;
+                $rows[] = $row;
             }
-
-            return $output;
+            return $rows;
 		}
 
         return $result;
 	}
+
+    function db () {
+
+        if (sys::$db) return;
+        global $CONF;
+        sys::$db = mysql_select_db($CONF['db_name'],
+            mysql_connect($CONF['db_host'], $CONF['db_login'], $CONF['db_pass'])
+        );
+        mysql_set_charset('utf8') || die('err:db msc02'); // TODO: error
+    }
 
 	//==========================================================================
 	// Функция предварительной загрузки
@@ -47,17 +48,11 @@ class sys {
 		return $CONF;
 	}
 
-	function getFields($table){
+	function getFields ($table) {
 		global $CONF;
 
-		if(empty($CONF["sqllink"])){
-			$CONF["sqllink"] = mysql_select_db($CONF["db_name"],mysql_connect($CONF["db_host"],$CONF["db_login"], $CONF["db_pass"]));
-		    
-			mysql_query("SET NAMES utf8") or die(mysql_error());
-			mysql_query("SET CHARACTER SET utf8") or die(mysql_error());
-		}
-		$table=str_replace('prefix_', $CONF["db_prefix"], $table);
-		$fields = mysql_list_fields($CONF["db_name"], $table);
+        if (sys::$db == false) sys::db();
+		$fields = mysql_list_fields($CONF["db_name"], str_replace('prefix_', $CONF["db_prefix"], $table));
 		return $fields;
 	}
   
