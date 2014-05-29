@@ -51,48 +51,28 @@ class modules_structure_admin{
 		echo admin::draw('page_index',$SEND);															// Выводим админку
 
 	}
-	// Функция вывода главной страницы структуры
-	//==================================================================================================
 
+	/*
+	 * Возвращает список дочерних элементов для дерева
+	 */
+    function findChild ($parentId, $author='') {
 
-
-	//==================================================================================================
-    // Функция поиска дочерних элементов
-    function findChild($id,$author=''){
-        $sql = sys::sql("
-            SELECT sect1.`id` , sect1.`title`,sect1.`pos`, COUNT(sect2.`parent_id`) countChild
-            FROM
-                (
-                    SELECT sect.`id` , sect.`title`, sect.`pos`
-                    FROM
-                        `prefix_Sections` sect
-                    WHERE sect.`parent_id` = '$id'
-                ) sect1
-            LEFT JOIN
-                `prefix_Sections` sect2
-            ON sect1.`id` = sect2.`parent_id`
-            GROUP BY sect1.`id`
-            ORDER BY sect1.`pos`, sect1.`id`
-        ",0);
-
-        while ($res = mysql_fetch_array($sql)){
-            if ($res['countChild']>0){
-                $child[] = array('label'=>$res['title'], 'id'=>$res['id'], 'items'=>'ajax', 'url'=>'?module=structure&action=findChild&id='.$res['id'].'&author=admin');
-            }else{
-                $child[] = array('label'=>$res['title'], 'id'=>$res['id']);
+        $rows = modules_structure_model::getChild($parentId);
+        foreach ($rows as &$row) {
+            $row['label'] = $row['title'];
+            unset($row['title']);
+            if ($row['countChild'] > 0) {
+                $row['items'] = 'ajax';
+                $row['url'] = '?module=structure&action=findChild&id=' . $row['id'] . '&author=admin';
             }
+            unset($row['countChild']);
         }
-
-        echo json_encode($child);
+        echo json_encode($rows);
     }
-    // Функция поиска дочерних элементов
-    //==================================================================================================
 
-
-
-
-	//==================================================================================================
-	// Диалог создания нового элемента
+	/*
+	 * Диалог создания нового элемента
+	 */
 	function addElement($parent_id,$author='',$parentHide=''){
 
 		if ($parent_id==0){																				// Если создается корень
@@ -176,8 +156,6 @@ class modules_structure_admin{
 		echo admin::draw('structure/addDialog',$SEND);													// Выводим диалог
 
 	}
-	// Диалог создания нового элемента
-	//==================================================================================================
 
 
 
@@ -627,8 +605,4 @@ class modules_structure_admin{
 		;",0);
 
 	}
-	// Функция создания таблицы
-	//==================================================================================================
 }
-// Конец класса
-?>
