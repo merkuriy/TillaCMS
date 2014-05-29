@@ -1,11 +1,11 @@
 <?php
 
-  class modules_structure_panel{
+class modules_structure_panel {
 
     /**
      * Draw tpl file with replaces
      */
-    public function draw_template($tpl, $replace = '') {
+    public function draw_template ($tpl, $replace = '') {
 
       if (is_array($tpl)) {
         $replace = $tpl['replace'];
@@ -664,4 +664,4 @@
         echo json_encode($out);
       }
     }
-  }
+}
