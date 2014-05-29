@@ -167,3 +167,55 @@ class sys {
 	}
 	
 }
+
+
+
+/*
+ * CodeIgniter compatible errors methods
+ */
+
+function show_error ($message, $statusCode = 500, $heading = '') {
+
+    if ($statusCode == 503) {
+        $statusTitle = 'Service Temporarily Unavailable';
+        header('Status: 503 ' . $statusTitle);
+        header('Retry-After: 300'); // 5 min
+
+    } else if ($statusCode == 404) {
+        $statusTitle = 'Not Found';
+
+    } else if ($statusCode == 500) {
+        $statusCode = 500;
+        $statusTitle = 'Internal Server Error';
+        $heading = $heading ? $heading : 'An Error Was Encountered';
+
+    } else {
+        show_error('No status text available. Please check your status code number or supply your own message text.');
+    }
+
+    if (substr(php_sapi_name(), 0, 3) == 'cgi') {
+        header("Status: $statusCode $statusTitle", true);
+
+    } else {
+        header(
+            (isset($_SERVER['SERVER_PROTOCOL']) && $_SERVER['SERVER_PROTOCOL'] == 'HTTP/1.0' ? 'HTTP/1.0' : 'HTTP/1.1')
+            . ' ' . $statusCode . ' ' . $statusTitle, true, $statusCode
+        );
+    }
+
+    $heading = $heading ? $heading : $statusCode . ' ' . $statusTitle;
+
+    die("<h1>$heading</h1> $message");
+}
+
+function show_404 ($msg = '', $log_error = true) {
+    show_error('The page that you have requested could not be found. ' . $msg, 404, '404 Page Not Found');
+}
+
+function redirect ($toUrl) {
+
+    global $CONF;
+    header('HTTP/1.1 301 Moved Permanently');
+    header('Location: ' . $CONF['app']['uri'] . $toUrl, true, '301');
+    die;
+}
