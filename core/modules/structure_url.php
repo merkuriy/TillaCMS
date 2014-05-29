@@ -53,9 +53,7 @@ class modules_structure_url {
                     // TODO: нужно проверять существование такой домашней страницы и выводить ошибку (возможно при инициализации)
 
                 } else {
-                    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-                    header('Status: 404 Not Found');
-                    exit;
+                    show_404('ehr1');
                 }
                 return true;
 
@@ -68,24 +66,28 @@ class modules_structure_url {
         view::debug_point($paths, 'URL= '.$request_uri, 0);
 
         if (empty($paths)) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-            header('Status: 404 Not Found');
-            exit;
+            show_404('ehr2');
         }
 
-        $pathsArr = explode('/', substr($paths, 1));
+        if ($paths[strlen($paths) - 1] == '/') { // urlfix=/
+            $paths = substr($paths, 1, -1);
+            $needUrlFix = false;
+        } else {
+            $paths = substr($paths, 1);
+            $needUrlFix = true;
+        }
+        $pathsArr = explode('/', $paths);
         foreach ($pathsArr as $key => $value) if ($value == '') {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-            header('Status: 404 Not Found');
-            exit;
-
+            $needUrlFix = true;
             unset($pathsArr[$key]);
         }
 
         if (modules_structure_url::buildingStructure($pathsArr) === false) {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
-            header('Status: 404 Not Found');
-            exit;
+            show_404('ehr3');
+        }
+
+        if ($needUrlFix) {
+            redirect('/' . implode('/', $pathsArr) . '/'); // urlfix=/
         }
 
         /*
@@ -133,7 +135,7 @@ class modules_structure_url {
         if (isset($result[0])) {
             //сохраняются данные атрибутов в системном массиве
             $system['section'][$result[0]['id']] = $result[0];
-            $system['section'][$result[0]['id']]['name'] &= $sectionName;
+            $system['section'][$result[0]['id']]['name'] =& $sectionName;
 
             modules_structure_view::newBaseClass( $result[0]['base_class'] );
             modules_structure_view::newLevel(     $result[0]['id'] );
@@ -152,11 +154,9 @@ class modules_structure_url {
                 if (isset($result[0])) {
                     /* если существует корневой раздел совпадающий с разделом первого уровня
                      * такое можно исправить автоматически редиректом HTTP 301
+                     * т. е. отбрасываем из адреса название корневого раздела
                      */
-                    // TODO: убрать прямую работу с $_SERVER['HTTP_HOST']
-                    header ($_SERVER['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
-                    header ('Location: http://' . $_SERVER['HTTP_HOST'] . '/' . implode('/', $paths));
-                    die;
+                    redirect('/' . implode('/', $paths) . '/'); // urlfix=/
                 }
             }
 
@@ -187,25 +187,21 @@ class modules_structure_url {
         }
 
         foreach ($paths as $sectionName) {
-            $temp_a = count($result) - 1;
-
-            do {
-                if ($result[$temp_a]['parent_id'] == $system['level'][modules_structure_view::getLevelLast()]['section']['id']) {
-                    if ($result[$temp_a]['name'] == $sectionName) {
-                        modules_structure_view::newBaseClass( $result[$temp_a]['base_class'] );
-                        modules_structure_view::newLevel(     $result[$temp_a]['id'] );
-                        unset($result[$temp_a]);
-                        break;
+            foreach ($result as $key => &$section) {
+                if ($section['parent_id'] == $system['level'][modules_structure_view::getLevelLast()]['section']['id']) {
+                    if ($section['name'] == $sectionName) {
+                        modules_structure_view::newBaseClass( $section['base_class'] );
+                        modules_structure_view::newLevel(     $section['id'] );
+                        unset($result[$key]);
+                        continue 2;
                     }
-                    unset($result[$temp_a]);
+                    unset($result[$key]);
                 }
-            } while (--$temp_a >= 0);
-
-            if ($temp_a == -1) {
-                //не было найдено очередного раздела
-                //<<error
-                return false;
             }
+
+            //не было найдено очередного раздела
+            //<<error
+            return false;
         }
 
         return true;
