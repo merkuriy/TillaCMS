@@ -346,22 +346,10 @@ class components_TImage {
 		
 		
 		//если псевдо параметр имени не задан, получаем первый в списке псевдо имён
-		if ($param == ''){
-			reset(
-				$system['classSection'][
-					$system['section'][$parentId]['base_class']
-				]['settings.'.$name]
-			);
-			
-			$param = key($system['classSection'][
-				$system['section'][$parentId]['base_class']
-			]['settings.'.$name]);
+		if ($param == '') {
+			reset($system['classSection'][ $system['section'][$parentId]['base_class'] ]['settings.'.$name]);
+			$param = key($system['classSection'][ $system['section'][$parentId]['base_class'] ]['settings.'.$name]);
 		}
-		
-		//Получаем путь к изображению заменителю пустышки
-		$path_none = $system['classSection'][
-				$system['section'][$parentId]['base_class']
-			]['settings.'.$name][$param]['path'];
 		
 		//Получаем id изображения
         $fileId = sys::sql("
@@ -370,13 +358,33 @@ class components_TImage {
             WHERE `name`='$name' AND `parent_id`='$parentId'
             LIMIT 1
         ;");
-        if ($fileId === false || mysql_num_rows($fileId) !== 1) return false;
-        $fileId = mysql_result($fileId, 0);
-		
-	    $file = '../data/images/'.$fileId.$param.'.jpg';
-		if (!file_exists($file)) {
-		    $file = '../data/images/'.$fileId.$param.'.png';
-            if (!file_exists($file)) return $path_none ? '/data/images/' . $path_none : false;
+        if ($fileId !== false && mysql_num_rows($fileId) > 0) {
+            $fileId = mysql_result($fileId, 0);
+            $file = '../data/images/'.$fileId.$param.'.jpg';
+            if (!file_exists($file)) {
+                $file = '../data/images/' . $fileId . $param . '.png';
+                if (!file_exists($file)) {
+                    $file = false;
+                }
+            }
+        } else {
+            $file = false;
+        }
+
+		if ($file === false) {
+            //Получаем путь к изображению заменителю пустышки
+            $placeholder = $system['classSection'][ $system['section'][$parentId]['base_class'] ]['settings.'.$name][$param]['path'];
+            if ($placeholder == '') {
+                return '';
+            } else {
+                $placeholderScheme = substr($placeholder, 0, 5);
+                if ($placeholderScheme == 'data:' or $placeholderScheme == 'http:' or
+                    $placeholder[0] == '/' or substr($placeholder, 0, 8) == 'https://'
+                ) {
+                    return $placeholder;
+                }
+                return '/data/images/' . $placeholder;
+            }
 		}
 		
 		switch ($dop) {
