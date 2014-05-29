@@ -23,14 +23,14 @@ class modules_structure_tpl {
             modules_structure_tpl::newTplLevel($tplType, $tplParam);
 
             if (!($idSection >= 1) and (
-                $system['tplLevel'][modules_structure_tpl::getTplLevelLast() - 1]['tplType'] == 'table' or
-                    $system['tplLevel'][modules_structure_tpl::getTplLevelLast() - 1]['tplType'] == 'line'
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplType'] == 'table' or
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplType'] == 'line'
             )) {
                 //--------------------------------------------------------------------------------------
                 // tplType - SECTION-> из TABLE
 
                 //idSection и ActiveLevel
-                $system['tplLevel'][modules_structure_tpl::getTplLevelLast()]['__activity'] = false;
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] = false;
 
                 //tplName
                 if ($tplName == '') {
@@ -53,8 +53,8 @@ class modules_structure_tpl {
 
                     // вычисляем tpl postfix name
                     // проверить, активен раздел или нет
-                    $currentId = $system['level'][modules_structure_view::getLevelLast()]['section']['id'];
-                    $tplLevelLast =& $system['tplLevel'][modules_structure_tpl::getTplLevelLast()];
+                    $currentId = $system['level'][ modules_structure_view::getLevelLast() ]['section']['id'];
+                    $tplLevelLast =& $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ];
                     end($system['sectionActivity']);
                     if (key($system['sectionActivity']) == $currentId) {
                         $tplLevelLast['tplPostfix'] = array('current', 'active');
@@ -81,16 +81,16 @@ class modules_structure_tpl {
                 if ($idSection >= 1 &&
                     $idSection != $system['level'][ modules_structure_view::getLevelLast() ]['section']['id']
                 ) {
-                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =
-						&$system['level'][ modules_structure_view::newLevel( $idSection ) ];
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =&
+                        $system['level'][ modules_structure_view::newLevel($idSection) ];
 
                     $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] = false;
                 } else {
-                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =
-						&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =&
+                        $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
 
-                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =
-						&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =&
+                        $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
                 }
 
                 //tplName
@@ -101,27 +101,23 @@ class modules_structure_tpl {
                         if (strlen($system['urlParam']['tpl_section']) > 0) {
                             //если в УРЛе страницы задан tpl_section
 
-                            $system['tplLevel'][
-                            modules_structure_tpl::getTplLevelLast()
-                            ]['tplName'] = $system['urlParam']['tpl_section'];
+                            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =
+                                $system['urlParam']['tpl_section'];
                         } else {
 
                             if (view::attr('tpl_section') == '') {
                                 //если в атрибутах не задан tpl_section
 
-                                $system['tplLevel'][
-                                modules_structure_tpl::getTplLevelLast()
-                                ]['tplName'] = 'default';
+                                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] = 'default';
                             } else {
-                                $system['tplLevel'][
-                                modules_structure_tpl::getTplLevelLast()
-                                ]['tplName'] = view::attr('tpl_section');
+                                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =
+                                    view::attr('tpl_section');
                             }
                         }
 
                     } else {
-                        $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =
-							&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
+                        $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =&
+                            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
                     }
                 } else {
                     $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] = $tplName;
@@ -142,18 +138,18 @@ class modules_structure_tpl {
                 return false; //<<error
             }
 
-            modules_structure_tpl::setNewTplLevel($tplType, $tplParam);
+            modules_structure_tpl::newTplLevel($tplType, $tplParam);
 
             //level и ActiveLevel
-            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =
-				&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
-            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =
-				&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
+            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =&
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
+            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =&
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
 
             //tplName
             if ($tplName == '') {
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =
-					&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =&
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
 
             } else {
                 $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] = $tplName;
@@ -171,41 +167,44 @@ class modules_structure_tpl {
             modules_structure_tpl::newTplLevel($tplType, $tplParam);
 
             //level и ActiveLevel
-            if ($idSection>=1 &&
+            if ($idSection >= 1 &&
                 $idSection != $system['level'][ modules_structure_view::getLevelLast() ]['section']['id']
             ) {
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =
-					&$system['level'][ modules_structure_view::newLevel( $idSection ) ];
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =&
+                    $system['level'][ modules_structure_view::newLevel($idSection) ];
                 $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] = false;
 
             } else {
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =
-					&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =
-					&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
-            }
-
-
-            if (modules_structure_sqlFilter::countChild() < 1) {
-                // в данном разделе нет дочерних элементов
-                // не выводим шаблон
-                modules_structure_tpl::removeTplLevel();
-
-                echo '</div>'; //закрываем точку дебага
-                return false; //<<error
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level'] =&
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level'];
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['__activity'] =&
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['__activity'];
             }
 
             //tplName
             if ($tplName == '') {
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =
-					&$system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
+                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] =&
+                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'];
             } else {
                 $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] = $tplName;
             }
 
-            view::debug_point($system['tplLevel'], 'tplType=TABLE, до pre_parseTemplate()', 1);
+            $content = modules_structure_tpl::getCache();
 
-            $content = modules_structure_tpl::pre_parseTemplate();
+            if (!$content) {
+                if (modules_structure_sqlFilter::countChild() < 1) {
+                    // в данном разделе нет дочерних элементов
+                    // не выводим шаблон
+                    modules_structure_tpl::removeTplLevel();
+
+                    echo '</div>'; //закрываем точку дебага
+                    return false; //<<error
+                }
+
+                view::debug_point($system['tplLevel'], 'tplType=TABLE, до pre_parseTemplate()', 1);
+
+                $content = modules_structure_tpl::pre_parseTemplate();
+            }
 
             modules_structure_tpl::removeTplLevel();
 
@@ -272,6 +271,8 @@ class modules_structure_tpl {
             //--------------------------------------------------------------------------------------
             // tplType - FIELD
 
+            // TODO: что бы использовать Cache, необходимо добавлять tplLevel для tplType=field
+
             if (strlen($tplName) >= 1) {
                 $content = modules_structure_tpl::readTemplate($tplType, $tplName);
             }
@@ -279,6 +280,29 @@ class modules_structure_tpl {
 
         echo '</div>';
         return $content;
+    }
+
+
+    function cacheActivate ($events) {
+
+        global $system;
+        $system['tplLevel'][modules_structure_tpl::getTplLevelLast()]['cache']['events'] = $events;
+    }
+
+    function getCache () {
+
+        global $system;
+
+        $tplLevelLast =& $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ];
+        // ищем кеш текущего шаблона
+        $tplCacheName = '../data/tpl-level-cache/' . str_replace( '/', '~', $tplLevelLast['tplName'])
+            . '.' . $tplLevelLast['tplType']
+            . '~' . $tplLevelLast['level']['section']['id'] . '.txt';
+        if (file_exists($tplCacheName)) {
+            return file_get_contents($tplCacheName);
+        }
+        $tplLevelLast['cache']['fileName'] = $tplCacheName;
+        return false;
     }
 
 
@@ -345,20 +369,31 @@ class modules_structure_tpl {
 
         global $system;
 
+        $tplLevelLast =& $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ];
+        if (modules_structure_tpl::getTplLevelLast() > 1) {
+            $tplLevelPreLast =& $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ];
+        } else {
+            $tplLevelPreLast = false;
+        }
+
         //проверяем на рекурсивность шаблона
-        if ($system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplType'] ==
-            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplType'] and
-            $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['tplName'] ==
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['tplName'] and
-                $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ]['level']['number'] ==
-                    $system['tplLevel'][ modules_structure_tpl::getTplLevelLast()-1 ]['level']['number']
+        if ($tplLevelPreLast !== false &&
+            $tplLevelLast['tplType'] == $tplLevelPreLast['tplType'] and
+            $tplLevelLast['tplName'] == $tplLevelPreLast['tplName'] and
+            $tplLevelLast['level']['number'] == $tplLevelPreLast['level']['number']
         ) {
             //<<error
             //выводим предупреждение и продолжаем работу
             view::debug_error('рекурсивный вызов шаблона');
         }
 
-        return modules_structure_tpl::parseTemplate();
+        $tplContent = modules_structure_tpl::parseTemplate();
+
+        // save cache
+        if (isset($tplLevelLast['cache']['events'])) {
+            file_put_contents($tplLevelLast['cache']['fileName'], $tplContent);
+        }
+        return $tplContent;
     }
 
 
@@ -394,11 +429,11 @@ class modules_structure_tpl {
 
         $CONF['readTplFileCount']++;
 
-        $tplLevelLast = &$system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ];
-        $tplFile = $tplLevelLast['tplName'].'.'.$tplLevelLast['tplType'];
+        $tplLevelLast =& $system['tplLevel'][ modules_structure_tpl::getTplLevelLast() ];
+        $tplFile = $tplLevelLast['tplName'] . '.' . $tplLevelLast['tplType'];
 
         if ($isPostfix = count($tplLevelLast['tplPostfix']) > 0) {
-            $tplFile .= '.'.current($tplLevelLast['tplPostfix']);
+            $tplFile .= '.' . current($tplLevelLast['tplPostfix']);
             unset($tplLevelLast['tplPostfix'][key($tplLevelLast['tplPostfix'])]);
         }
 
@@ -412,7 +447,7 @@ class modules_structure_tpl {
                 if (file_exists($tplCacheFile) and filemtime($tplFileDir) < filemtime($tplCacheFile)) {
                     //если найден актульный кеш шаблона
                     $system['tplFile'][$tplFile] = create_function( '',
-                        'return \''.file_get_contents( $tplCacheFile ).'\';'
+                        'return\'' . file_get_contents($tplCacheFile) . '\';'
                     );
 
                 } else {
@@ -431,7 +466,7 @@ class modules_structure_tpl {
                 //если такого файла шаблона нет
                 if ($isPostfix) {
                     //если нет файла шаблона с постфиксом
-                    //пробуем прочитать без постфикса
+                    //пробуем прочитать без постфикса или с другим постфиксом
                     $system['tplFile'][$tplFile] =&
                         $system['tplFile'][modules_structure_tpl::readTemplateFile()];
 
@@ -798,3 +833,8 @@ class modules_structure_tpl {
     }
 
 }
+
+
+global $CONF;
+$CONF['readTplFileCount'] = 0;
+$CONF['readTplFileTime']  = 0;

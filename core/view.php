@@ -139,6 +139,10 @@ class view {
         }
     }
 
+    function tplCache ($events) {
+        return modules_structure_tpl::cacheActivate($events);
+    }
+
     function debug_point (&$var, $msg = '', $status = 0) {
 
         global $debug_point;
