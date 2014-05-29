@@ -6,17 +6,22 @@ class modules_structure_site {
 	 *
 	 */
     function metaTitle () {
-        if (!$title = view::attr('metaTitle')) {
+
+        if (isset(view::$data['page.metaTitle'])) {
+            $title = view::$data['page.metaTitle'];
+        } elseif (!$title = view::attr('metaTitle')) {
             $title = view::attr('title') . ' — ' . modules_settings_sys::get('site.title');
         }
         return '<title>' . $title . '</title>';
     }
+
     function metaKeywords () {
         if (!$keywords = view::attr('metaKeywords')) {
             if (!$keywords = modules_settings_sys::get('site.keywords')) return;
         }
         return '<meta name="keywords" content="' . $keywords . '">';
     }
+
     function metaDescription () {
         if (!$description = view::attr('metaDescription')) {
             if (!$description = modules_settings_sys::get('site.description')) return;
@@ -26,8 +31,8 @@ class modules_structure_site {
 
     function metaAll () {
         return modules_structure_site::metaTitle()
-            . modules_structure_site::metaKeywords()
-            . modules_structure_site::metaDescription();
+            .  modules_structure_site::metaKeywords()
+            .  modules_structure_site::metaDescription();
     }
 
 
