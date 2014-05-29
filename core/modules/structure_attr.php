@@ -10,7 +10,7 @@ class modules_structure_attr {
     /*
      * получить атрибут раздела
      */
-    function getAttributeSection ($attrName = '', $idSection = '') {
+    static function getAttributeSection ($attrName = '', $idSection = '') {
 
         global $system;
 
@@ -22,8 +22,8 @@ class modules_structure_attr {
 
             if (empty($idSection[1])) {
                 //если указан только номер
-                $idSection[1]=$idSection[0];
-                $idSection[0]='level';
+                $idSection[1] = $idSection[0];
+                $idSection[0] = 'level';
             }
         }
 
@@ -161,7 +161,7 @@ class modules_structure_attr {
     /*
      * получить динамический атрибут
      */
-    function getAttributeDynamic ($attrName = '', $idSection = '') {
+    static function getAttributeDynamic ($attrName = '', $idSection = '') {
 
         global $system;
 
