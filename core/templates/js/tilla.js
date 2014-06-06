@@ -465,33 +465,34 @@ $().ready(function() {
   });
 
 
-  // Attr settings
+  /**
+   * To model attr settings
+   */
   $('#model-attrs .icon-cog').live('click', function() {
-    var $component = $.trim($(this).closest('tr').find('td:eq(2)').text()),
-        $id        = $(this).closest('tr').data('id');
+
+    var
+      component = $.trim($(this).closest('tr').find('td:eq(2)').text()),
+      id = $(this).closest('tr').data('id');
 
     $.ajax({
-      type: "GET",
       dataType: 'json',
-      url: "/api.post/structure_panel.get_component_settings?id="+id+"&component="+$component,
-      success: function(msg){
-        if ($component == 'THidden') {
+      url: '/api.post/structure_panel.get_component_settings?id='+id+'&component='+component,
+      success: function (msg) {
+
+        if (component == 'THidden') {
           $('#model-thidden-default').val(msg.value);
-        }
 
-        if ($component == 'TText') {
+        } else if (component == 'TText') {
           $('#model-ttext-type option[value="'+msg.value+'"]').attr('selected', 'selected');
-        }
 
-        if ($component == 'TSelect') {
+        } else if (component == 'TSelect') {
           var $tselect_markup = '<tr data-id="${id}"><td>${title}</td><td>${name}</td><td class="width14"><i class="icon-trash control"></i></td></tr>';
 
-          $("#model-tselect-values").html('');
+          $('#model-tselect-values').empty();
           $.template('model-tselect', $tselect_markup);
           $.tmpl("model-tselect", msg.value).appendTo("#model-tselect-values");
-        }
 
-        if ($component == 'TImage') {
+        } else if (component == 'TImage') {
           $('.timage-rule').remove();
           $('#TImageSettings').data('id', id);
           var resize = ['Не масштабировать', 'Вписывыть в обслать', 'Подрезать под обслать'];
@@ -507,11 +508,12 @@ $().ready(function() {
             );
           });
         }
+
       }
     });
 
-    $('#' + $component + 'Settings').modal('show').data('id', id);
-  })
+    $('#' + component + 'Settings').modal('show').data('id', id);
+  });
 
 
   $('#add-image-settings').live('click', function() {

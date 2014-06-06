@@ -11,7 +11,8 @@
           <td><input type="text" id="settings-val" /><div class="float-right"><i class="icon-plus"></i></div></td>
         </tr>
       </tbody>
-      <tbody id="settings-rows"></tbody>
+      <tbody id="settings-rows">
+      </tbody>
     </table>
   </div>
 </div>
