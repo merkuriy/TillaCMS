@@ -69,13 +69,33 @@ class modules_structure_url {
             show_404('ehr2');
         }
 
-        if ($paths[strlen($paths) - 1] == '/') { // urlfix=/
-            $paths = substr($paths, 1, -1);
-            $needUrlFix = false;
-        } else {
+//        $CONF['app']['uri']['postfix']
+        if (empty($CONF['app']['uri']['postfix'])) {
+            $CONF['app']['uri']['postfix'] = '';
+            /*
+             * postfix=""
+             * Если обязательные постфиксы URI не используются, то
+             * будет проделана проверка на завершающий слеш (ниже при проверке лишних слешей)
+             */
+            $needUrlFix = false; // $needUrlFix = substr($paths, -1) == '/';
             $paths = substr($paths, 1);
-            $needUrlFix = true;
+
+        } else {
+            /*
+             * postfix="..."
+             * Если обязательные постфиксы URI используются, то
+             * производим проверку на присутсвие постфикса.
+             * Если постфикс присутвует, то удаляем его из $paths.
+             * Если постфикс отсутвтсвует, то назначаем исправление текущего URI (needUrlFix)
+             */
+            $postfixPos = 0 - strlen($CONF['app']['uri']['postfix']);
+            if ($needUrlFix = substr($paths, $postfixPos) == $CONF['app']['uri']['postfix']) {
+                $paths = substr($paths, 1);
+            } else {
+                $paths = substr($paths, 1, $postfixPos);
+            }
         }
+
         $pathsArr = explode('/', $paths);
         foreach ($pathsArr as $key => $value) if ($value == '') {
             $needUrlFix = true;
@@ -87,7 +107,7 @@ class modules_structure_url {
         }
 
         if ($needUrlFix) {
-            redirect('/' . implode('/', $pathsArr) . '/'); // urlfix=/
+            redirect('/' . implode('/', $pathsArr) . $CONF['app']['uri']['postfix']); // urlfix=/
         }
 
         /*
