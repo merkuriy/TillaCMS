@@ -216,6 +216,6 @@ function redirect ($toUrl) {
 
     global $CONF;
     header('HTTP/1.1 301 Moved Permanently');
-    header('Location: ' . $CONF['app']['uri'] . $toUrl, true, '301');
+    header('Location: ' . $CONF['app']['uri']['base'] . $toUrl, true, '301');
     die;
 }
